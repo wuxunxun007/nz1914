@@ -1,0 +1,44 @@
+<view>
+  {{ message }}
+</view>
+<!-- vue 绑定属性 :class="message" -->
+<!-- react class={message} -->
+<view class="{{message}}">
+  组件属性
+</view>
+<!-- 控制属性 -->
+<!-- vue v-if="flag" v-if  v-else-if v-else -->
+<view wx:if="{{flag}}">如果为真我就显示</view>
+<!-- wx:if wx:elif wx:else -->
+
+<!-- 如果属性的值是boolean 或者 number类型  使用{{}}包裹 -->
+<!-- 复选框 -->
+<!-- input v-model="flag" flag 真 选中  假 未选中 -->
+<checkbox checked="{{false}}"></checkbox>
+<checkbox checked="false"></checkbox>
+
+<view id="{{10}}"></view>
+
+<!-- 表达式 -->
+<!-- vue 表达式 vs 方法 vs 计算属性 -->
+<view>{{ 1 + 2 + 3 }}</view>
+<!-- 该表达时未被解析 -->
+<view>{{ message.split('').reverse().join('') }}</view>
+
+<!-- 列表渲染 -->
+<!-- vue v-for = "(item, index) of list" -->
+<!-- vue v-for = "(item, index) in list" -->
+<!-- 一层循环 -->
+<view wx:for="{{list}}" wx:key="{{index}}">
+  <text>{{index}}</text> - <text>{{item}}</text>
+</view>
+<!-- 多层循环
+wx:for-item='itm'   ---  重新指定元素名
+wx:for-index='idx'  ---   重新指定索引值
+ -->
+<view wx:for="{{carlist}}" wx:key="{{index}}">
+  {{ item.brand }}
+  <view wx:for="{{item.list}}" wx:for-item="itm" wx:key="{{idx}}"  wx:for-index="idx">
+    <view>{{itm}}</view>
+  </view>
+</view>

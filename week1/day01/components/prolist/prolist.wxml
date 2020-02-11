@@ -1,0 +1,21 @@
+<!-- view类似于div text类似于span image类似于img -->
+<!-- <ul>
+  <li>列表1</li>
+  <li>列表2</li>
+</ul> -->
+<view class="ul">
+  <view class="li">列表1</view>
+  <view class="li">列表2</view>
+  <view class="li">列表3</view>
+  <view class="li">列表4</view>
+  <view class="li">列表5</view>
+  <view class="li">列表6</view>
+  <view class="li">列表7</view>
+  <view class="li">列表8</view>
+  <view class="li">列表9</view>
+  <view class="li">列表10</view>
+  <view class="li">列表11</view>
+  <view class="li">列表12</view>
+  <view class="li">列表13</view>
+  <view class="li">列表14</view>
+</view>
