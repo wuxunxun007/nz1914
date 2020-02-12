@@ -1,2 +1,34 @@
-<!-- <prolist></prolist> -->
-<prolist />
+<!-- swiper为滑块视图容器
+*this 就是自己
+ -->
+<swiper class="banner" indicator-dots="{{ true }}" autoplay="{{ true }}" interval="{{ 2000 }}" circular="{{ true }}" >
+  <swiper-item wx:for="{{bannerlist}}" wx:key="*this">
+    <image lazy-load="{{true}}" mode="widthFix" show-menu-by-longpress="{{true}}" src="{{'http://daxun.kuboy.top' + item}}"></image>
+  </swiper-item>
+</swiper>
+<!-- 
+  vue 父组件给子组件传值
+  父组件在调用子组件的地方，添加一个自定义的属性，属性的值就是需要传递给子组件的值，
+  如果属性的值是变量、boolean、number数据，需要使用绑定属性
+
+  子组件定义的地方，添加一个props选项，props选项的值是一个数组或者对象
+
+  1.如果是数组，数组的元素就是自定义的属性名，可以在组件中通过此自定义属性名访问数据
+  2.如果是对象，有两种形式，
+    2.1 key值为自定义的属性名，value值为数据类型
+    2.2 key值为自定义的属性名，value为一个对象，该对象有两个选项，一个为type（数据类型），一个未default（默认值）,如果默认值是对象或者数组，需要把default写为一个函数，返回对象和数组
+ -->
+ <!-- 小程序
+  父组件在调用子组件的地方，添加一个自定义的属性，属性的值就是需要传递给子组件的值，
+  如果属性的值是变量、boolean、number数据，需要使用{{}}包裹
+  <prolist prolist="{{prolist}}"/>
+  子组件定义的地方，添加一个properties选项，properties选项的值是一个对象
+
+  key值为自定义的属性名，value值为数据类型
+  properties: {
+    prolist: Array
+  }
+
+  可以在组件中通过此自定义属性名访问数据
+  -->
+<prolist prolist="{{prolist}}"/>

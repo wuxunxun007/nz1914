@@ -10,7 +10,7 @@ const baseUrl = 'http://daxun.kuboy.top/api'
 
 export function request (options) {
   // 解构赋值 ---  获取用户传递的参数信息
-  const { url, data } = options;
+  const { url, data, method } = options;
   // 加载动画 https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showLoading.html
   wx.showLoading({
     title: '加载中',
@@ -21,6 +21,7 @@ export function request (options) {
     wx.request({
       url: baseUrl + url,
       data: data || {},
+      method: method || 'GET',
       success: (res) => {
         // 异步操作成功调用resolve
         resolve(res)

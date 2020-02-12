@@ -3,7 +3,7 @@
   <li>列表1</li>
   <li>列表2</li>
 </ul> -->
-<view class="ul">
+<!-- <view class="ul">
   <view class="li">列表1</view>
   <view class="li">列表2</view>
   <view class="li">列表3</view>
@@ -18,4 +18,16 @@
   <view class="li">列表12</view>
   <view class="li">列表13</view>
   <view class="li">列表14</view>
+</view> -->
+<view class="prolist">
+  <view class="proitem" wx:for="{{prolist}}" wx:key="item.proid">
+    <view class="itemimg">
+      <image src="{{item.proimg}}"></image>
+    </view>
+    <view class="iteminfo">
+      <view class="title">{{item.proname}}</view>
+      <view class="title">{{item.sales}} / {{item.stock}}</view>
+      <view class="price">￥{{item.price}}</view>
+    </view>
+  </view>
 </view>

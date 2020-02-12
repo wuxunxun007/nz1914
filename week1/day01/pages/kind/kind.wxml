@@ -1,2 +1,3 @@
 <!--pages/kind/kind.wxml-->
 <text>pages/kind/kind.wxml</text>
+<navigator url="/pages/test/test">测试</navigator>

@@ -8,7 +8,8 @@ Page({
    * 页面的初始数据 ---- vue中的data
    */
   data: {
-
+    bannerlist: [],
+    prolist: []
   },
 
   /**
@@ -16,14 +17,10 @@ Page({
    */
   onLoad: function (options) {
     console.log('onLoad')
-    request({
-      url: '/pro',
-      data: {}
-    }).then((res) => { // 建议使用箭头函数---this指向
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
+    // 请求轮播图数据
+    this.getBannerData()
+    // 请求列表数据
+    this.getProlistData()
   },
 
   /**
@@ -31,7 +28,7 @@ Page({
    */
   onReady: function () {
     console.log('onReady')
-    console.log(getCurrentPages())
+    
   },
 
   /**
@@ -105,5 +102,34 @@ Page({
    */
   testfn () {
     console.log('自定义函数')
+  },
+  // 请求轮播图数据
+  getBannerData () {
+    // 请求轮播图数据
+    request({
+      url: '/pro/banner'
+    }).then(res => {
+      console.log(res)
+      // vue this.bannerlist = res.data.data
+      // react this.setState({bannerlist: res.data.data})
+      // 小程序修改状态的方式 就是 this.setData
+      this.setData({
+        bannerlist: res.data.data
+      })
+    })
+  },
+  // 请求列表数据
+  getProlistData () {
+    request({
+      url: '/pro',
+      data: {}
+    }).then((res) => { // 建议使用箭头函数---this指向
+      console.log(res)
+      this.setData({
+        prolist: res.data.data
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 })

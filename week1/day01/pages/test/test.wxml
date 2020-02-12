@@ -1,3 +1,4 @@
+<navigator url="/pages/home/home" open-type="switchTab">首页</navigator>
 <view>
   {{ message }}
 </view>
@@ -29,16 +30,17 @@
 <!-- vue v-for = "(item, index) of list" -->
 <!-- vue v-for = "(item, index) in list" -->
 <!-- 一层循环 -->
-<view wx:for="{{list}}" wx:key="{{index}}">
+<view wx:for="{{list}}" wx:key="index">
   <text>{{index}}</text> - <text>{{item}}</text>
 </view>
 <!-- 多层循环
 wx:for-item='itm'   ---  重新指定元素名
 wx:for-index='idx'  ---   重新指定索引值
+Did you mean wx:key="index"
  -->
-<view wx:for="{{carlist}}" wx:key="{{index}}">
+<view wx:for="{{carlist}}" wx:key="index">
   {{ item.brand }}
-  <view wx:for="{{item.list}}" wx:for-item="itm" wx:key="{{idx}}"  wx:for-index="idx">
+  <view wx:for="{{item.list}}" wx:for-item="itm" wx:key="idx"  wx:for-index="idx">
     <view>{{itm}}</view>
   </view>
 </view>
