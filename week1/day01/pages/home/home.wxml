@@ -32,3 +32,37 @@
   可以在组件中通过此自定义属性名访问数据
   -->
 <prolist prolist="{{prolist}}"/>
+<!-- 返回顶部按钮 -->
+<!-- 绑定事件 
+  vue v-on:click=""
+  react onCLick={ this.clickFn }
+  minpro  移动端尽量不使用click事件 ，建议使用tap事件，或者使用touch代替click事件
+    bindtap  
+    catchtap  ---- 阻止冒泡
+    事件不加（） bindtap="backtop"
+ -->
+<button class="backtop" bindtap="backtop">返回顶部</button>
+
+<!-- 首页列表进入详情
+  声明式导航
+    vue <router-link></router-link>
+    react <Link></Link> <NavLink></NavLink>
+  编程式导航
+    new Vue({router, store, el: ''})
+    vue this.$router.push() replace() back() go()
+    react this.props.history.push() .......
+ -->
+
+ <!-- minpro
+  声明式导航 - 标签跳转 - a
+  https://developers.weixin.qq.com/miniprogram/dev/component/navigator.html
+  <navigator url="" open-type=""></navigator>
+  open-type 
+    navigate 保留当前页面，新添加一个页面，不能新添加tab页面 ---- push
+    redirect 替换当前页面，不能替换tab页面  ---- replace
+    switchTab 切换当前的tab页面 ---  小程序独属
+    navigateBack 返回  ----  back  goBack
+
+  编程式导航 - js跳转 - window.location.href=""
+  https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html
+  -->

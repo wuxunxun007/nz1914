@@ -6,7 +6,8 @@
     "pages/cart/cart",
     "pages/logs/logs",
     "pages/test/test",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/detail/detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#f66",

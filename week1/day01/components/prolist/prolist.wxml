@@ -19,7 +19,7 @@
   <view class="li">列表13</view>
   <view class="li">列表14</view>
 </view> -->
-<view class="prolist">
+<!-- <view class="prolist">
   <view class="proitem" wx:for="{{prolist}}" wx:key="item.proid">
     <view class="itemimg">
       <image src="{{item.proimg}}"></image>
@@ -30,4 +30,32 @@
       <view class="price">￥{{item.price}}</view>
     </view>
   </view>
+</view> -->
+
+<!-- 声明式跳转
+  vue 
+    router-link :to="{ name: 'detail', params: { proid: item.proid}}"
+    router-link :to="{ name: 'detail', query: { proid: item.proid}}"
+    router-link :to="'/detail/' + item.proid"
+    router-link :to="'/detail?proid=' + item.proid"
+  
+  minpro
+    url="/pages/detail/detail?proid=123&name=456"
+
+    另一个页面的 onLoad的生命周期函数的参数就是传递的值 ---- pages/detail/detail.js
+
+ -->
+<view class="prolist">
+  <navigator url="{{'/pages/detail/detail?proid=' + item.proid }}" wx:for="{{prolist}}" wx:key="item.proid">
+    <view class="proitem" >
+      <view class="itemimg">
+        <image src="{{item.proimg}}"></image>
+      </view>
+      <view class="iteminfo">
+        <view class="title">{{item.proname}}</view>
+        <view class="title">{{item.sales}} / {{item.stock}}</view>
+        <view class="price">￥{{item.price}}</view>
+      </view>
+    </view>
+  </navigator>
 </view>

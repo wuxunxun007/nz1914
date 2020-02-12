@@ -37,3 +37,16 @@ export function request (options) {
     })
   })
 }
+
+/**
+ * 封装toast显示
+ * https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html
+ */
+export function toast (options) {
+  const { title, icon, duration } = options
+  wx.showToast({
+    title,
+    icon: icon || 'none', // success loading
+    duration: duration || 2000
+  })
+}
