@@ -1,5 +1,6 @@
 // pages/detail/detail.js
 import { request } from './../../utils/index.js'
+var WxParse = require('./../../wxParse/wxParse.js');
 Page({
 
   /**
@@ -25,26 +26,32 @@ Page({
       // url: '/pro/detail?proid=' + proid
       url: `/pro/detail?proid=${proid}`
     }).then(res => {
-      // console.log(res.data);
-      // 解构赋值 --- 装AC之间用的
-      // const { proname, proimg, detail, price } = res.data.data
-      // const { data: { proname, proimg, detail, price } } = res.data
-      const { data: { data: { proname, proimg, detail, price } } } = res
-      /**
-       * const { data } = res.data
-       * const { proname, proimg, detail, price } = data
-       */
-      // 修改状态
-      this.setData({
-        proid, // 不需要从 响应数据中拿取，但是可以从那拿（可以拿，但不需要）
-        proname,
-        proimg,
-        detail,
-        price
-      })
+      // 如果详情页面的数据处理特别庞大，建议抽离代码
+      // 轮播图数据+ 产品的基本数据+优惠信息+详情+评论+猜你喜欢.... --- 产品id关联
+      this.getDetailData(res, proid)
     })
   },
-
+  getDetailData(res, proid) {
+    // console.log(res.data);
+    // 解构赋值 --- 装AC之间用的
+    // const { proname, proimg, detail, price } = res.data.data
+    // const { data: { proname, proimg, detail, price } } = res.data
+    const { data: { data: { proname, proimg, detail, price } } } = res
+    /**
+     * const { data } = res.data
+     * const { proname, proimg, detail, price } = data
+     */
+    // 修改状态
+    this.setData({
+      proid, // 不需要从 响应数据中拿取，但是可以从那拿（可以拿，但不需要）
+      proname,
+      proimg,
+      detail,
+      price
+    })
+    var article = detail;
+    WxParse.wxParse('article', 'html', article, this, 5);
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

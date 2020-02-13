@@ -1,3 +1,4 @@
+<import src="/wxParse/wxParse.wxml"/>
 <image src="{{proimg}}"></image>
 <view>{{proname}}</view>
 <view>￥{{price}}</view>
@@ -7,5 +8,6 @@
 <!-- rich-text
 https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html
  -->
-<rich-text nodes="{{detail}}" ></rich-text>
+<!-- <rich-text nodes="{{detail}}" ></rich-text> -->
+<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
 

@@ -1,2 +1,9 @@
-<!--pages/map/map.wxml-->
-<text>pages/map/map.wxml</text>
+<map 
+  class="map" 
+  longitude="{{longitude}}" 
+  latitude="{{latitude}}"
+  scale="20"
+  markers="{{markers}}"
+  controls="{{controls}}"
+  bindcontroltap="controlshandler"
+  ></map>

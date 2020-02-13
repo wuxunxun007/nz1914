@@ -13,6 +13,8 @@
 App({
   // 生命周期回调——监听小程序初始化。
   onLaunch: function () {
+    // 获取设备的信息
+    this.getDeviceInfoFn()
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -45,6 +47,16 @@ App({
       }
     })
   },
+
+  getDeviceInfoFn () {
+    wx.getSystemInfo({
+      success: (res) => {
+        console.log(res)
+        // 修改全局数据
+        this.globalData.deviceinfo = res
+      }
+    })
+  },
   // 生命周期回调——监听小程序启动或切前台。
   onShow () {
     console.log('show')
@@ -63,7 +75,8 @@ App({
   },
   // 自定义的全局的变量，可以是任何的数据类型 --- 状态管理器
   globalData: {
-    userInfo: null
+    userInfo: null,
+    deviceinfo: null
   },
   fn () {
     console.log('全局逻辑自定义函数')
