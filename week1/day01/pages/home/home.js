@@ -1,6 +1,6 @@
 // pages/home/home.js
 const app = getApp();
-console.log(app)
+// console.log(app)
 import { request, toast } from './../../utils/index.js'
 Page({
 
@@ -18,7 +18,7 @@ Page({
    * 生命周期函数--监听页面加载 --- mounted --- 请求数据
    */
   onLoad: function (options) {
-    console.log('onLoad')
+    // console.log('onLoad')
     // 请求轮播图数据
     this.getBannerData()
     // 请求列表数据
@@ -29,7 +29,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    console.log('onReady')
+    // console.log('onReady')
     
   },
 
@@ -37,7 +37,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log('onShow')
+    // console.log('onShow')
     // 获取当前的页面栈
     console.log(getCurrentPages())
   },
@@ -46,14 +46,14 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    console.log('onHide')
+    // console.log('onHide')
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log('onUnload')
+    // console.log('onUnload')
   },
 
   /**
@@ -64,7 +64,7 @@ Page({
    * 3.一定一定要切记 重置页码 *********************************
    */
   onPullDownRefresh: function () {
-    console.log('刷新当前页面')
+    // console.log('刷新当前页面')
     this.refreshData()
   },
 
@@ -76,7 +76,7 @@ Page({
    *  2.1 需要一个页码的变量 --- 初始化数据中设置页码
    */
   onReachBottom: function () {
-    console.log('加载数据')
+    // console.log('加载数据')
     this.requestMoreData()
   },
 
@@ -85,7 +85,7 @@ Page({
    * 可以通过微信提供的api修改分享的内容
    */
   onShareAppMessage: function () {
-    console.log('你准备好分享了吗')
+    // console.log('你准备好分享了吗')
   },
 
   /**
@@ -103,7 +103,7 @@ Page({
    * 就是全局配置的底部选项卡
    */
   onTabItemTap () {
-    console.log('首页')
+    // console.log('首页')
   },
 
   /**
@@ -111,7 +111,7 @@ Page({
    * 页面离不开事件 --- 自定义的函数
    */
   testfn () {
-    console.log('自定义函数')
+    // console.log('自定义函数')
   },
   // 请求轮播图数据
   getBannerData () {
@@ -119,7 +119,7 @@ Page({
     request({
       url: '/pro/banner'
     }).then(res => {
-      console.log(res)
+      // console.log(res)
       // vue this.bannerlist = res.data.data
       // react this.setState({bannerlist: res.data.data})
       // 小程序修改状态的方式 就是 this.setData
@@ -134,7 +134,7 @@ Page({
       url: '/pro',
       data: {}
     }).then((res) => { // 建议使用箭头函数---this指向
-      console.log(res)
+      // console.log(res)
       this.setData({
         prolist: res.data.data
       })
@@ -159,6 +159,8 @@ Page({
         prolist: res.data.data,
         pageCode: 1 // 一定要记得重置页码 ---- 没有数据的提示（上拉加载提示过后）
       })
+      // 真机测试的时候，下拉刷新技术需要停止 下拉刷新的操作
+      wx.stopPullDownRefresh();
     }).catch((err) => {
       console.log(err)
     })

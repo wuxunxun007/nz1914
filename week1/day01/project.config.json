@@ -48,12 +48,20 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
 					"id": -1,
 					"name": "测试小程序语法",
 					"pathName": "pages/test/test",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "详情",
+					"pathName": "pages/detail/detail",
+					"query": "proid=pro_d245ee20-0c40-11ea-9bb7-f90a52a739bb",
 					"scene": null
 				}
 			]

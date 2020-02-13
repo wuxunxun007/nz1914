@@ -1,11 +1,16 @@
 // pages/detail/detail.js
+import { request } from './../../utils/index.js'
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    proid: '', // 加入购物车时肯定需要（userid， proid， num）
+    proname: '', // 显示详情的名称 ---- 修改头部的标题文字
+    proimg: '', // 展示图片
+    detail: '', // 产品的详情
+    price: '' // 产品价格
   },
 
   /**
@@ -13,6 +18,31 @@ Page({
    */
   onLoad: function (options) {
     console.log(options) // 保证产品的id是唯一的 使用的是 uuid 
+    // 1. 获取了产品的唯一值 proid
+    const { proid } = options
+    // 2. 请求数据 ---  先引入数据请求模块
+    request({
+      // url: '/pro/detail?proid=' + proid
+      url: `/pro/detail?proid=${proid}`
+    }).then(res => {
+      // console.log(res.data);
+      // 解构赋值 --- 装AC之间用的
+      // const { proname, proimg, detail, price } = res.data.data
+      // const { data: { proname, proimg, detail, price } } = res.data
+      const { data: { data: { proname, proimg, detail, price } } } = res
+      /**
+       * const { data } = res.data
+       * const { proname, proimg, detail, price } = data
+       */
+      // 修改状态
+      this.setData({
+        proid, // 不需要从 响应数据中拿取，但是可以从那拿（可以拿，但不需要）
+        proname,
+        proimg,
+        detail,
+        price
+      })
+    })
   },
 
   /**
@@ -26,7 +56,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    // 减一为自己，减二为上一页
+    console.log(getCurrentPages()[getCurrentPages().length - 1])
   },
 
   /**

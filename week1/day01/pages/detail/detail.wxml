@@ -1,2 +1,11 @@
-<!--pages/detail/detail.wxml-->
-<text>pages/detail/detail.wxml</text>
+<image src="{{proimg}}"></image>
+<view>{{proname}}</view>
+<view>￥{{price}}</view>
+<!-- <view>{{detail}}</view> -->
+<!-- <view wx:html="{{detail}}"></view> -->
+<!-- 解析HTML标签  --- wxparse -->
+<!-- rich-text
+https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html
+ -->
+<rich-text nodes="{{detail}}" ></rich-text>
+

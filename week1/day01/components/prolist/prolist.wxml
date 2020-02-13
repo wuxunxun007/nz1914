@@ -45,8 +45,8 @@
     另一个页面的 onLoad的生命周期函数的参数就是传递的值 ---- pages/detail/detail.js
 
  -->
-<view class="prolist">
-  <navigator url="{{'/pages/detail/detail?proid=' + item.proid }}" wx:for="{{prolist}}" wx:key="item.proid">
+<!-- <view class="prolist">
+  <navigator url="{{'/pages/detail/detail?proid=' + item.proid }}" wx:for="{{prolist}}" wx:key="index">
     <view class="proitem" >
       <view class="itemimg">
         <image src="{{item.proimg}}"></image>
@@ -58,4 +58,56 @@
       </view>
     </view>
   </navigator>
+</view> -->
+
+<!-- 编程式导航
+https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html
+
+wx.switchTab(Object object)
+
+跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面
+
+wx.reLaunch(Object object)
+
+关闭所有页面，打开到应用内的某个页面
+
+wx.redirectTo(Object object)
+
+关闭当前页面，跳转到应用内的某个页面。但是不允许跳转到 tabbar 页面
+
+wx.navigateTo(Object object)
+
+保留当前页面，跳转到应用内的某个页面。但是不能跳到 tabbar 页面。使用 wx.navigateBack 可以返回到原页面。小程序中页面栈最多十层
+
+wx.navigateBack(Object object)
+
+关闭当前页面，返回上一页面或多级页面。可通过 getCurrentPages 获取当前的页面栈，决定需要返回几层
+
+js跳转
+  需要设定函数
+    bindtap / catchtap
+  
+  prolist 是一个组件 ---  与页面的事件的不同（页面中定义事件）
+    minpro 组件事件 参考自vue。
+    组件的自定义事件必须写在组件的选项 methods 中
+
+  详情页面需要传递  产品的id    item.proid
+
+  小程序传递参数时，使用格式形如  data-proid="item.proid"
+    事件含有 事件对象 event  通过event 获取 参数  event.currentTarget.dataset
+
+  跳转页面
+ -->
+
+<view class="prolist">
+  <view class="proitem" data-proid="{{item.proid}}" bindtap="toDetail" wx:for="{{prolist}}" wx:key="index">
+    <view class="itemimg">
+      <image src="{{item.proimg}}"></image>
+    </view>
+    <view class="iteminfo">
+      <view class="title">{{item.proname}}</view>
+      <view class="title">{{item.sales}} / {{item.stock}}</view>
+      <view class="price">￥{{item.price}}</view>
+    </view>
+  </view>
 </view>
