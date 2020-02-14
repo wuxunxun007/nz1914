@@ -9,12 +9,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    longitude: '116.3974700000', // 经度
-    latitude: "39.9088230000", // 维度
+    longitude: 116.3974700000, // 经度
+    latitude: 39.9088230000, // 维度
     markers: [{
       id: 1, // marker 点击事件回调会返回此 id。建议为每个 marker 设置上 number 类型 id，保证更新 marker 时有更好的性能。
-      longitude: '116.3974700000', // 经度
-      latitude: "39.9088230000", // 维度
+      longitude: 116.3974700000, // 经度
+      latitude: 39.9088230000, // 维度
       title: '我爱北京天安门，天安门上太阳升', // 点击marker提示信息
       iconPath: '/resources/map/flag.png', // 图标 -支持网络路径
       // rotate: 15 // 此处坚决不旋转

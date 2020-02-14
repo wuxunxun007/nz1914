@@ -213,5 +213,20 @@ Page({
     wx.pageScrollTo({
       scrollTop: 0 // 0表示滚动条的位置为0
     })
+  },
+  /**
+   * 点击轮播图 预览图片
+   */
+  previewImage (event) {
+    let arr = []; // 预留空数组
+    let index = event.currentTarget.dataset.index // 获取当前点击的图片的索引
+    this.data.bannerlist.map(item => { // 将处理的数据压入数组
+     arr.push('http://daxun.kuboy.top' + item)
+    })
+    console.log(arr)
+    wx.previewImage({ // 调用预览图片
+      current: arr[index],
+      urls: arr
+    })
   }
 })

@@ -419,7 +419,7 @@ showdown.validateExtension = function (ext) {
 
   var validateExtension = validate(ext, null);
   if (!validateExtension.valid) {
-    console.warn(validateExtension.error);
+    console.log(validateExtension.error);
     return false;
   }
   return true;
@@ -788,7 +788,7 @@ showdown.Converter = function (converterOptions) {
 
       // LEGACY_SUPPORT CODE
       if (showdown.extensions[ext]) {
-        console.warn('DEPRECATION WARNING: ' + ext + ' is an old extension that uses a deprecated loading method.' +
+        console.log('DEPRECATION WARNING: ' + ext + ' is an old extension that uses a deprecated loading method.' +
           'Please inform the developer that the extension should be updated!');
         legacyExtensionLoading(showdown.extensions[ext], ext);
         return;

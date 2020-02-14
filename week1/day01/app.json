@@ -59,7 +59,7 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "小程序位置信息展示11111111111111111111111111"
+      "desc": "小程序位置信息展示1111111"
     }
   },
   "navigateToMiniProgramAppIdList": [

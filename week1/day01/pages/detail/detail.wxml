@@ -8,6 +8,6 @@
 <!-- rich-text
 https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html
  -->
-<!-- <rich-text nodes="{{detail}}" ></rich-text> -->
-<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+<rich-text nodes="{{detail}}" ></rich-text>
+<!-- <template is="wxParse" data="{{wxParseData:article.nodes}}"/> -->
 

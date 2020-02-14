@@ -44,3 +44,9 @@ Did you mean wx:key="index"
     <view>{{itm}}</view>
   </view>
 </view>
+<!-- 引入模板 -->
+<import src="./tem.wxml"/>
+<!-- 
+  使用模板  is队形对应模板的 name值
+ -->
+<template is="test" data="{{ a: 11 }}"></template>

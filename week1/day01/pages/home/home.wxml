@@ -3,7 +3,7 @@
  -->
 <swiper class="banner" indicator-dots="{{ true }}" autoplay="{{ true }}" interval="{{ 2000 }}" circular="{{ true }}" >
   <swiper-item wx:for="{{bannerlist}}" wx:key="*this">
-    <image lazy-load="{{true}}" mode="widthFix" show-menu-by-longpress="{{true}}" src="{{'http://daxun.kuboy.top' + item}}"></image>
+    <image lazy-load="{{true}}" mode="widthFix" show-menu-by-longpress="{{true}}" src="{{'http://daxun.kuboy.top' + item}}" data-index="index" bindtap="previewImage"></image>
   </swiper-item>
 </swiper>
 <!-- 

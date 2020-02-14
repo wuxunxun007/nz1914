@@ -1,0 +1,3 @@
+<template name="test">
+  <view>这就是一个模板 - {{a}}</view>
+</template>

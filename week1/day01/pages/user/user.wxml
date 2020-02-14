@@ -1,2 +1,4 @@
-<!--pages/user/user.wxml-->
-<text>pages/user/user.wxml</text>
+<button bindtap="chooseImage">头像</button>
+<button bindtap="showActionSheet">操作表</button>
+
+<image src="{{item}}" wx:for="{{imglist}}" wx:key="index"></image>
