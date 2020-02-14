@@ -1,3 +1,9 @@
-<!--pages/kind/kind.wxml-->
-<text>pages/kind/kind.wxml</text>
-<navigator url="/pages/test/test">测试</navigator>
+<van-tabs active="{{ active }}" bind:change="onChange">
+  <van-tab wx:for="{{titles}}" title="{{item}}" wx:key="index">
+    <view class="brandul">
+      <view wx:for="{{brandlist}}" data-brand="{{item.brand}}" bindtap="getKindlist" wx:key="index">{{ item.brand }}</view>
+    </view>
+    <prolist prolist="{{kindlist}}" />
+  </van-tab>
+</van-tabs>
+
