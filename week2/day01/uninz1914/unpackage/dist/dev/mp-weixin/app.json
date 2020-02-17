@@ -45,5 +45,11 @@
       }
     ]
   },
-  "usingComponents": {}
+  "permission": {
+    "scope.userLocation": {
+      "desc": "定位"
+    }
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap91.json"
 }

@@ -1,52 +1,55 @@
 {
-  "description": "项目配置文件。",
-  "packOptions": {
-    "ignore": []
-  },
-  "setting": {
-    "urlCheck": false
-  },
-  "compileType": "miniprogram",
-  "libVersion": "2.9.2",
-  "appid": "touristappid",
-  "projectname": "uninz1914",
-  "condition": {
-    "search": {
-      "current": -1,
-      "list": []
-    },
-    "conversation": {
-      "current": -1,
-      "list": []
-    },
-    "game": {
-      "current": -1,
-      "list": []
-    },
-    "miniprogram": {
-      "current": 0,
-      "list": [
-        {
-          "name": "首页",
-          "id": 0,
-          "pathName": "pages/home/home"
-        },
-        {
-          "name": "分类",
-          "id": 1,
-          "pathName": "pages/kind/kind"
-        },
-        {
-          "name": "购物车",
-          "id": 2,
-          "pathName": "pages/cart/cart"
-        },
-        {
-          "name": "我的",
-          "id": 3,
-          "pathName": "pages/user/user"
-        }
-      ]
-    }
-  }
+	"description": "项目配置文件。",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.9.2",
+	"appid": "wx5dfe0dd623d5ae6a",
+	"projectname": "uninz1914",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"name": "首页",
+					"id": 0,
+					"pathName": "pages/home/home"
+				},
+				{
+					"name": "分类",
+					"id": 1,
+					"pathName": "pages/kind/kind"
+				},
+				{
+					"name": "购物车",
+					"id": 2,
+					"pathName": "pages/cart/cart"
+				},
+				{
+					"name": "我的",
+					"id": 3,
+					"pathName": "pages/user/user"
+				}
+			]
+		}
+	}
 }
