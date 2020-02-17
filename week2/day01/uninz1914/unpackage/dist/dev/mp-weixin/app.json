@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/kind/kind",
+    "pages/cart/cart",
+    "pages/user/user"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "嗨购",
+    "navigationBarBackgroundColor": "#ff6666",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#333",
+    "selectedColor": "#f66",
+    "backgroundColor": "#efefef",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/resources/home.png",
+        "selectedIconPath": "static/resources/home_active.png"
+      },
+      {
+        "pagePath": "pages/kind/kind",
+        "text": "分类",
+        "iconPath": "static/resources/kind.png",
+        "selectedIconPath": "static/resources/kind_active.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "static/resources/cart.png",
+        "selectedIconPath": "static/resources/cart_active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/resources/user.png",
+        "selectedIconPath": "static/resources/user_active.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

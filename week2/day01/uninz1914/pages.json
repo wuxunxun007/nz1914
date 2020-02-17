@@ -1,0 +1,88 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path" : "pages/home/home",
+      "style" : {
+        "navigationBarTitleText": "嗨购-首页",
+        "enablePullDownRefresh": true
+      }
+    },
+		{
+			"path": "pages/index/index",
+			"style": {
+			}
+    },
+    {
+      "path" : "pages/kind/kind",
+      "style" : {
+        "navigationBarTitleText": "嗨购-分类"
+      }
+    },
+    {
+      "path" : "pages/cart/cart",
+      "style" : {
+        "navigationBarTitleText": "嗨购-购物车"
+      }
+    },
+    {
+      "path" : "pages/user/user",
+      "style" : {
+        "navigationBarTitleText": "嗨购-我的"
+      }
+    }
+  ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "嗨购",
+		"navigationBarBackgroundColor": "#ff6666",
+		"backgroundColor": "#F8F8F8"
+	},
+  "tabBar": {
+    "color": "#333",
+    "selectedColor": "#f66",
+    "backgroundColor": "#efefef",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/resources/home.png",
+        "selectedIconPath": "static/resources/home_active.png"
+      },
+      {
+        "pagePath": "pages/kind/kind",
+        "text": "分类",
+        "iconPath": "static/resources/kind.png",
+        "selectedIconPath": "static/resources/kind_active.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "static/resources/cart.png",
+        "selectedIconPath": "static/resources/cart_active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/resources/user.png",
+        "selectedIconPath": "static/resources/user_active.png"
+      }
+    ]
+  },
+  "condition": { //模式配置，仅开发期间生效  ---- 设置小程序的编译模式
+    "current": 0, //当前激活的模式（list 的索引项）
+    "list": [{
+      "name": "首页",
+      "path": "pages/home/home"
+    },{
+      "name": "分类",
+      "path": "pages/kind/kind"
+    },{
+      "name": "购物车",
+      "path": "pages/cart/cart"
+    },{
+      "name": "我的",
+      "path": "pages/user/user"
+    }]
+  }
+}
