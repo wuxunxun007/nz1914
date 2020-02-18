@@ -8661,7 +8661,7 @@ function normalizeComponent (
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.request = request;var baseUrl = "http://daxun.kuboy.top/api";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.request = request;exports.toast = toast;var baseUrl = "http://daxun.kuboy.top/api";
 
 function request(options) {var
   url = options.url,method = options.method,data = options.data,header = options.header;
@@ -8686,6 +8686,15 @@ function request(options) {var
       } });
 
   });
+}
+
+function toast(options) {var
+  title = options.title,icon = options.icon,duration = options.duration;
+  uni.showToast({
+    title: title,
+    icon: icon || 'none',
+    duration: duration || 5000 });
+
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

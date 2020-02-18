@@ -140,6 +140,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var _index = __webpack_require__(/*! ../../utils/index.js */ 21); //
 //
 //
@@ -148,8 +149,8 @@ var _index = __webpack_require__(/*! ../../utils/index.js */ 21); //
 //
 //
 //
-var _default = { data: function data() {return { proname: '', proid: '', proimg: '', price: 0 };
-  },
+//
+var _default = { data: function data() {return { proname: '', proid: '', proimg: '', price: 0 };},
   onLoad: function onLoad(options) {var _this = this;
     // console.log(options)
     var proid = options.proid;
@@ -167,7 +168,41 @@ var _default = { data: function data() {return { proname: '', proid: '', proimg:
 
     });
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    addCart: function addCart() {
+      // 获取本地存储的信息 token  userid
+      try {
+        var token = uni.getStorageSync('token');
+        var userid = uni.getStorageSync('userid');
+        if (token && userid) {// 前端校验登陆
+          // 加入购物车判断用户是不是登陆状态 ---- 登陆   ----  继续加入购物车
+          (0, _index.request)({
+            url: '/cart/add',
+            method: 'POST',
+            data: {
+              token: token, userid: userid, num: 1, proid: this.proid } }).
+
+          then(function (res) {
+            if (res.data.code === '10119') {// 后端校验登陆状态
+              (0, _index.toast)({ title: '请先登录' });
+              uni.navigateTo({
+                url: '/pages/login/login' });
+
+            } else {
+              (0, _index.toast)({ title: '加入购物车成功' });
+            }
+          });
+        } else {
+          (0, _index.toast)({ title: '请先登录' });
+          uni.navigateTo({
+            url: '/pages/login/login' });
+
+        }
+      } catch (e) {
+        // error
+      }
+
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })

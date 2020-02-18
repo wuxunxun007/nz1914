@@ -24,3 +24,12 @@ export function request (options) {
     })
   })
 }
+
+export function toast (options) {
+  const { title, icon, duration } = options
+  uni.showToast({
+    title: title,
+    icon: icon || 'none',
+    duration: duration || 5000
+  })
+}

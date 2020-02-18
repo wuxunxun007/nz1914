@@ -131,20 +131,169 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _index = __webpack_require__(/*! ../../utils/index.js */ 21); //
 //
 //
 //
 //
 //
-var _default =
-{
-  data: function data() {
-    return {};
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = { data: function data() {return { flag: true, cartlist: [] };}, computed: { totalNum: function totalNum() {var totalNum = 0;this.cartlist.map(function (item) {totalNum += item.num;});return totalNum;}, totalPrice: function totalPrice() {var totalPrice = 0;this.cartlist.map(function (item) {totalPrice += item.num * item.price;});
+      return totalPrice;
+    } },
+
+  onLoad: function onLoad() {
+    console.log('onLoad');
+  },
+  onShow: function onShow() {var _this = this; // 不使用 onLoad 以及 mounted 是因为页面被缓存，数据更新不及时
+    console.log('onShow');
+    try {
+      var userid = uni.getStorageSync('userid');
+      var token = uni.getStorageSync('token');
+      if (userid && token) {
+        (0, _index.request)({
+          url: '/cart',
+          data: {
+            userid: userid, token: token } }).
+
+        then(function (res) {
+          if (res.data.code === '10019') {
+            (0, _index.toast)({ title: '请先登录' });
+            uni.navigateTo({
+              url: '/pages/login/login' });
+
+          } else if (res.data.code === '10012') {
+            (0, _index.toast)({ title: '请先选购商品' });
+            _this.flag = true;
+          } else {
+            (0, _index.toast)({ title: '购物车列表获取成功' });
+            _this.flag = false;
+            _this.cartlist = res.data.data;
+          }
+        });
+      } else {
+        (0, _index.toast)({ title: '请先登录' });
+        uni.navigateTo({
+          url: '/pages/login/login' });
+
+      }
+    } catch (e) {
+      //TODO handle the exception
+    }
 
 
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    reduce: function reduce(item) {
+      // 如果当前的个数为1 不操作，如果大于1减1操作
+      var num = item.num;
+      if (num > 1) {
+        num -= 1;
+      } else {
+        num = 1;
+      }
+      var token = uni.getStorageSync('token');
+      (0, _index.request)({
+        url: '/cart/update',
+        data: {
+          token: token,
+          cartid: item.cartid, // item包含购物车记录id
+          num: num } }).
+
+      then(function (res) {
+        if (res.data.code === '10019') {
+          (0, _index.toast)({ title: '请先登录' });
+          uni.navigateTo({
+            url: '/pages/login/login' });
+
+        } else {
+          (0, _index.toast)({ title: '修改数量成功' });
+          item.num -= 1; // 服务器返回成功之后  视图才更新
+        }
+      });
+    },
+    add: function add(item) {
+      // item.num += 1
+      // 加1
+      var num = item.num;
+      num += 1;
+      var token = uni.getStorageSync('token');
+      (0, _index.request)({
+        url: '/cart/update',
+        data: {
+          token: token,
+          cartid: item.cartid, // item包含购物车记录id
+          num: num } }).
+
+      then(function (res) {
+        if (res.data.code === '10019') {
+          (0, _index.toast)({ title: '请先登录' });
+          uni.navigateTo({
+            url: '/pages/login/login' });
+
+        } else {
+          (0, _index.toast)({ title: '修改数量成功' });
+          item.num += 1; // 服务器返回成功之后  视图才更新
+        }
+      });
+    },
+    del: function del(item, index) {var _this2 = this;
+      var token = uni.getStorageSync('token');
+      (0, _index.request)({
+        url: '/cart/delete',
+        data: {
+          token: token,
+          cartid: item.cartid } }).
+
+      then(function (res) {
+        if (res.data.code === '10019') {
+          (0, _index.toast)({ title: '请先登录' });
+          uni.navigateTo({
+            url: '/pages/login/login' });
+
+        } else {
+          (0, _index.toast)({ title: '删除数据成功' });
+          _this2.cartlist.splice(index, 1); // 删除当前的数据
+          // 如果点击删除 删完之后要显示没有数据了
+          _this2.cartlist.length === 0 ? _this2.flag = true : _this2.flag = false;
+        }
+      });
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })
 
