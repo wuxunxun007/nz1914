@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "嗨购-首页",
   "enablePullDownRefresh": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "prolist": "/components/prolist/prolist"
+  }
 }

@@ -4,7 +4,10 @@
     "pages/index/index",
     "pages/kind/kind",
     "pages/cart/cart",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/detail/detail",
+    "pages/login/login",
+    "pages/register/register"
   ],
   "subPackages": [],
   "window": {
@@ -50,6 +53,5 @@
       "desc": "定位"
     }
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap91.json"
+  "usingComponents": {}
 }

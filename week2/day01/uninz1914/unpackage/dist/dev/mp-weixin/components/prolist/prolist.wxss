@@ -1,0 +1,30 @@
+
+.prolist .proitem {
+  width: 100%;
+  height: 100px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  box-sizing: border-box;
+  border-bottom: 1rpx solid #ccc;
+}
+/* gulp */
+.prolist .proitem .itemimg {
+  width: 100px;
+  height: 100px;
+}
+.prolist .proitem .itemimg image{
+  width: 90px;
+  height: 90px;
+  box-sizing: border-box;
+  /* 如果是网页开发，需要写一个物理像素 ---- scss库  ---- 1px边框 */
+  border: 1rpx solid #ccc;
+  margin: 5px;
+}
+.prolist .proitem .iteminfo {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  padding: 3px 5px;
+}
+

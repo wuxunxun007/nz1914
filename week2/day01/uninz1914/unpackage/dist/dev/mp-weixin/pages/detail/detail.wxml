@@ -1,0 +1,1 @@
+<view><image src="{{proimg}}" mode></image><view>{{proname}}</view><view>{{price}}</view></view>

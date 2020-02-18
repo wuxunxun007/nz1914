@@ -29,8 +29,20 @@
       "style" : {
         "navigationBarTitleText": "嗨购-我的"
       }
+    },
+    {
+      "path" : "pages/detail/detail",
+      "style" : {}
     }
-  ],
+      ,{
+            "path" : "pages/login/login",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/register/register",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "嗨购",
@@ -83,6 +95,9 @@
     },{
       "name": "我的",
       "path": "pages/user/user"
+    },{
+      "name": "登陆",
+      "path": "pages/login/login"
     }]
   }
 }

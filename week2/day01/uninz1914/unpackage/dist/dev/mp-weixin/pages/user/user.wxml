@@ -1,1 +1,1 @@
-<view>个人中心</view>
+<view><view data-event-opts="{{[['tap',[['takephoto',['$event']]]]]}}" class="takephoto" bindtap="__e">拍照</view><block wx:for="{{list}}" wx:for-item="item" wx:for-index="index" wx:key="index"><image src="{{item}}"></image></block></view>
