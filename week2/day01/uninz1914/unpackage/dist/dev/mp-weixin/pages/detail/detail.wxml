@@ -1,1 +1,0 @@
-<view><image src="{{proimg}}" mode></image><view>{{proname}}</view><view>{{price}}</view><button data-event-opts="{{[['tap',[['addCart',['$event']]]]]}}" bindtap="__e">加入购物车</button></view>

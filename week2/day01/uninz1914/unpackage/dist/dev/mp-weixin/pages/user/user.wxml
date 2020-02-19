@@ -1,1 +1,0 @@
-<view><view data-event-opts="{{[['tap',[['takephoto',['$event']]]]]}}" class="takephoto" bindtap="__e">拍照</view><block wx:for="{{list}}" wx:for-item="item" wx:for-index="index" wx:key="index"><image src="{{item}}"></image></block><navigator url="/pages/login/login">登陆</navigator></view>
