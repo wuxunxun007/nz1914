@@ -1,7 +1,7 @@
 const config = {
   projectName: 'app',
   date: '2020-2-19',
-  designWidth: 750,
+  designWidth: 750, // 设计师设计的设计稿的宽度
   deviceRatio: {
     '640': 2.34 / 2,
     '750': 1,
@@ -51,8 +51,8 @@ const config = {
       },
       url: {
         enable: true,
-        config: {
-          limit: 10240 // 设定转换尺寸上限
+        config: { // css中书写背景图片（本地资源）
+          limit: 102400 // 设定转换尺寸上限
         }
       },
       cssModules: {
