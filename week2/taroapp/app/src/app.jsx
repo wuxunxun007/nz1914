@@ -26,7 +26,9 @@ class App extends Component {
       'pages/kind/index',
       'pages/cart/index',
       'pages/user/index',
-      'pages/index/index'
+      'pages/index/index',
+      'pages/detail/index',
+      'pages/login/index'
     ],
     window: { // 窗口表现
       backgroundTextStyle: 'light',

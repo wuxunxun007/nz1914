@@ -345,7 +345,7 @@ class Index extends Taro.Component {
       <View className="prolist">
         <View className="proitem">
           <View className="itemimg">
-            <Image src=''></Image>
+            <Image className='img' src=''></Image>
           </View>
           <View className="iteminfo">
             <View className="title">item.proname</View>
@@ -374,7 +374,7 @@ export default Index
   width: 100PX;
   height: 100PX;
 }
-.prolist .proitem .itemimg image{
+.prolist .proitem .itemimg .img{
   width: 90PX;
   height: 90PX;
   box-sizing: border-box;
@@ -565,8 +565,279 @@ onReachBottom () {
         prolist,
         pageCode
       })
-
     }
   })
 }
 ```
+
+### 8.9 返回顶部
+
+定位一个小图标于 右下角，点击小图标时 调用 taro提供的api返回顶部即可
+
+当滚动条滚动到一定位置时 小图标出现
+
+```
+<View className="backtop" onClick={ () => {
+  console.log('1111')
+  Taro.pageScrollTo({
+    scrollTop: 0,
+    duration: 500
+  })
+} }>↑</View>
+// pages/home/index.scss
+.backtop {
+  position: fixed;
+  right: 10Px;
+  bottom: 60Px;
+  width: 30PX;
+  height: 30PX;
+  background-color: rgba(0,0,0,0.4);
+  color: #fff;
+  text-align: center;
+  line-height: 30Px;
+  border-radius: 50%;
+}
+```
+
+# 9.列表进入详情并且渲染
+
+## 9.1 设计一个详情页面
+```
+// pages/detail/index.jsx
+
+import Taro, { Component } from '@tarojs/taro'
+import { View, Image } from '@tarojs/components'
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      proid: '',
+      proname: '',
+      proimg: '',
+      price: 0
+    }
+  }
+
+  render () {
+    return (
+      <View>
+        <Image src={ this.state.proimg }></Image>
+        <View>{ this.state.proname }</View>
+        <View>{ this.state.price }</View>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+// app.jsx中在pages中注册页面 ---- 修改配置文件 ---- 配置文件修改需重启服务器
+config = { // 最终编译成为 app.json
+  pages: [ // 路由
+    'pages/home/index',
+    'pages/kind/index',
+    'pages/cart/index',
+    'pages/user/index',
+    'pages/index/index',
+    'pages/detail/index' // +++++++++++++
+  ],
+  ...
+}  
+```
+
+## 9.2 列表跳转至详情 并且传递参数
+// react 声明式跳转（Link, NavLink） react-router-dom
+// react 编程式跳转 this.props.history .push() .replace() .goBack()
+// 如果组件中 的this.props 没有history这个属性，那么如何编程式跳转
+//    找到距离最近的父组件，传this.props给这个组件
+//    withRouter react-router-dom
+
+// taro 声明式跳转 ---  Navigator url指明路径 可以传递参数
+```
+// components/prolist/index.jsx
+render () {
+  return (
+    <View className="prolist">
+      {
+        this.props.prolist.map(item => (
+          <Navigator url={ '/pages/detail/index?proid=' + item.proid } className="proitem" key={ item.proid }>
+            <View className="itemimg">
+              <Image className="img" src={ item.proimg }></Image>
+            </View>
+            <View className="iteminfo">
+              <View className="title">{ item.proname }</View>
+              <View className="title">{ item.sales } / { item.stock }</View>
+              <View className="price">￥{ item.price }</View>
+            </View>
+          </Navigator>
+        ))
+      }
+    </View>
+  )
+}
+```
+### 9.3 详情页面获取数据
+// react this.props 获取参数。
+// taro  this.$router
+
+```
+// pages/detail/index.jsx
+componentDidMount () {
+  console.log(this.$router.params) // 获取参数信息
+  const { proid } = this.$router.params
+  request({
+    url: '/pro/detail', // get请求的参数也可以放在data中
+    data: {
+      proid
+    }
+  }).then(res => {
+    const { proname, proimg, price } = res.data.data
+    this.setState({
+      proname, proimg, price, proid
+    })
+    Taro.setNavigationBarTitle({// 修改详情的标题
+      title: proname
+    }) 
+  })
+}
+```
+
+### 9.4 编程式导航跳转
+// react this.props.history. push replace goBack
+// taro Taro.navigateTo Taro.switchTab Taro.redirectTo 
+
+```
+// components/prolist/index.jsx
+class Index extends Taro.Component {
+  render () {
+    return (
+      <View className="prolist">
+        {
+          this.props.prolist.map(item => (
+            <View className="proitem" key={ item.proid } onClick={ () => {
+              Taro.navigateTo({
+                url: '/pages/detail/index?proid=' + item.proid
+              })
+            } }>
+              <View className="itemimg">
+                <Image className="img" src={ item.proimg }></Image>
+              </View>
+              <View className="iteminfo">
+                <View className="title">{ item.proname }</View>
+                <View className="title">{ item.sales } / { item.stock }</View>
+                <View className="price">￥{ item.price }</View>
+              </View>
+            </View>
+          ))
+        }
+      </View>
+    )
+  }
+}
+
+// 校验数据格式
+Index.propTypes = {
+  prolist: PropTypes.array
+}
+
+export default Index
+
+```
+
+## 10.登陆注册
+
+### 10.1 设计登陆页面
+```
+// pages/login/index.jsx
+import Taro, { Component } from '@tarojs/taro'
+import { View } from '@tarojs/components'
+
+class Index extends Component {
+  render () {
+    return (
+      <View>
+        登陆
+      </View>
+    )
+  }
+}
+
+export default Index
+
+// app.jsx 注册路由
+pages: [ // 路由
+  'pages/home/index',
+  'pages/kind/index',
+  'pages/cart/index',
+  'pages/user/index',
+  'pages/index/index',
+  'pages/detail/index',
+  'pages/login/index' // +++++++++++
+],
+```
+
+### 10.2 完成登陆的表单
+> cnpm i taro-ui -S
+
+config/index.js中h5的标识处添加如下代码
+```
+h5: {
+  esnextModules: ['taro-ui']
+}
+```
+
+```
+// pages/login/index.jsx
+// 找到taro-ui中的需要的组件，在jsx中导入组件，在scss文件中引入 需要的样式表
+import Taro, { Component } from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { AtInput, AtForm, AtButton } from 'taro-ui'
+import './index.scss'
+
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      tel: '18813007814',
+      password: '123456'
+    }
+  }
+  render () {
+    return (
+      <View>
+        <AtForm>
+          <AtInput
+            name='tel'
+            title='手机号码为11位'
+            type='text'
+            placeholder='手机号码'
+            value={this.state.tel}
+          />
+          <AtInput
+            name='password'
+            title='密码长度不能少于6位'
+            type='password'
+            placeholder='密码'
+            value={this.state.password}
+          />
+          <AtButton type='secondary' size='normal'>登陆</AtButton>
+        </AtForm>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+// pages/login/index.scss
+@import "~taro-ui/dist/style/components/input.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
+@import "~taro-ui/dist/style/components/button.scss";
+@import "~taro-ui/dist/style/components/loading.scss";
+
+```
+
+### 10.3 表单校验
+
+## 11.购物车
+vue （uniapp）直接改变数据 ---  （获取数据，处理数据、修改状态）

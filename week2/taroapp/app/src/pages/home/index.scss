@@ -1,2 +1,14 @@
 .h1{ font-size: 24Px; }
 // .bannerimg { width: 100%;}
+.backtop {
+  position: fixed;
+  right: 10Px;
+  bottom: 60Px;
+  width: 30PX;
+  height: 30PX;
+  background-color: rgba(0,0,0,0.4);
+  color: #fff;
+  text-align: center;
+  line-height: 30Px;
+  border-radius: 50%;
+}

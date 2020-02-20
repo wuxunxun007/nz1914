@@ -104,6 +104,13 @@ class Index extends Component {
           在父组件调用子组件的地方，添加一个自定义的属性，属性的值就是要传递给子组件的值，如果值是一个变量，boolean，或者是number类，需要使用{}包裹
         */}
         <Prolist prolist={ this.state.prolist }/>
+        <View className="backtop" onClick={ () => {
+          console.log('1111')
+          Taro.pageScrollTo({
+            scrollTop: 0,
+            duration: 500
+          })
+        } }>↑</View>
       </View>
     )
   }

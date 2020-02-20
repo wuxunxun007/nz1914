@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import PropTypes from 'prop-types'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Navigator } from '@tarojs/components'
 import './index.scss'
 /**
  * 子组件 使用 prop-types 进行数据的校验，校验完毕。
@@ -13,7 +13,31 @@ class Index extends Taro.Component {
       <View className="prolist">
         {
           this.props.prolist.map(item => (
-            <View className="proitem" key={ item.proid }>
+            // <View className="proitem" key={ item.proid }>
+            //   <View className="itemimg">
+            //     <Image className="img" src={ item.proimg }></Image>
+            //   </View>
+            //   <View className="iteminfo">
+            //     <View className="title">{ item.proname }</View>
+            //     <View className="title">{ item.sales } / { item.stock }</View>
+            //     <View className="price">￥{ item.price }</View>
+            //   </View>
+            // </View>
+            // <Navigator url={ '/pages/detail/index?proid=' + item.proid } className="proitem" key={ item.proid }>
+            //   <View className="itemimg">
+            //     <Image className="img" src={ item.proimg }></Image>
+            //   </View>
+            //   <View className="iteminfo">
+            //     <View className="title">{ item.proname }</View>
+            //     <View className="title">{ item.sales } / { item.stock }</View>
+            //     <View className="price">￥{ item.price }</View>
+            //   </View>
+            // </Navigator>
+            <View className="proitem" key={ item.proid } onClick={ () => {
+              Taro.navigateTo({
+                url: '/pages/detail/index?proid=' + item.proid
+              })
+            } }>
               <View className="itemimg">
                 <Image className="img" src={ item.proimg }></Image>
               </View>
