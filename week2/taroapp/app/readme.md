@@ -201,3 +201,372 @@ onPageScroll(Object)
 onShareAppMessage(Object)
 
 ## 6.3 组件生命周期 参考的就是react的生命周期
+
+# 7.熟悉taro中的各种 语法
+
+状态、属性、列表渲染、条件的渲染、事件的处理...
+
+# 8.项目首页的相关实现
+
+## 8.1实现首页轮播图
+
+（轮播图状态、生命周期钩子中请求数据、修改状态、渲染数据）
+
+### 1.状态设置
+```
+// constructor 写了必写 super ，要不就不写 constructor，super事关 this指向的问题   ---  es6的构造函数中的机制
+  // ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。
+
+constructor (props) {
+  super(props)
+  // 1.设置状态
+  this.state = {
+    bannerlist: []
+  }
+}
+```
+### 2、请求数据
+
+* 封装数据库的请求 src/utils/index.js
+```
+import Taro from '@tarojs/taro'
+const baseUrl = 'http://daxun.kuboy.top/api'
+
+export function request (options) {
+  const { url, data, method, header } = options
+  Taro.showLoading({
+    title: '加载中'
+  })
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: baseUrl + url,
+      data: data || {},
+      method: method || 'GET',
+      header: header || {},
+      success: res => {
+        resolve(res)
+      },
+      fail: err => {
+        reject(err)
+      },
+      complete: () => {
+        Taro.hideLoading()
+      }
+    })
+  })
+}
+```
+
+* pages/home/index.jsx 引入请求数据，修改状态
+```
+// 2.请求数据
+import { request } from './../../utils'
+componentDidMount () {
+  // vue /react  axios /fetch ajax
+  // wx  wx.request
+  // uni uni.request
+  // taro taro.request
+  request({
+    url: '/pro/banner'
+  }).then(res => {
+    console.log(res.data)
+    this.setState({
+      bannerlist: res.data.data
+    })
+  })
+}
+```
+
+* 渲染数据
+```
+render () {
+  return (
+    <View>
+      <Swiper indicatorDots autoplay circular>
+        {
+          this.state.bannerlist.map((item, index) => (
+            <SwiperItem key={index}>
+              <Image className="bannerimg" style={ {width: '100%'} }  mode="aspectFit" src={'http://daxun.kuboy.top' + item} />
+            </SwiperItem>
+          ))
+        }
+      </Swiper>
+    </View>
+  )
+}
+```
+
+## 8.2 实现列表的效果
+
+### 1.自定义一个列表组件
+```
+// src/components/prolist/index.jsx
+import Taro from '@tarojs/taro'
+import { View } from '@tarojs/components'
+
+class Index extends Taro.Component {
+  render () {
+    return (
+      <View>
+        列表
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```
+
+### 8.2 首页引入列表组件测试
+```
+import Prolist from './../../components/prolist'
+render () {
+  return (
+    <View>
+      <Swiper indicatorDots autoplay circular>
+        ...
+      </Swiper>
+      <Prolist />
+    </View>
+  )
+}
+```
+
+### 8.3 构建组件的样式
+```
+// prolist/index.jsx
+import Taro from '@tarojs/taro'
+import { View, Image } from '@tarojs/components'
+import './index.scss'
+class Index extends Taro.Component {
+  render () {
+    return (
+      <View className="prolist">
+        <View className="proitem">
+          <View className="itemimg">
+            <Image src=''></Image>
+          </View>
+          <View className="iteminfo">
+            <View className="title">item.proname</View>
+            <View className="title">item.sales / item.stock</View>
+            <View className="price">￥item.price</View>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+// prolist/index.scss
+
+.prolist .proitem {
+  width: 100%;
+  height: 100PX;
+  display: flex;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+}
+/* gulp */
+.prolist .proitem .itemimg {
+  width: 100PX;
+  height: 100PX;
+}
+.prolist .proitem .itemimg image{
+  width: 90PX;
+  height: 90PX;
+  box-sizing: border-box;
+  /* 如果是网页开发，需要写一个物理像素 ---- scss库  ---- 1PX边框 */
+  border: 1px solid #ccc;
+  margin: 5PX;
+}
+
+.prolist .proitem .iteminfo {
+  flex: 1;
+  padding: 3PX 5PX;
+}
+```
+
+### 8.4 首页请求数据，并且传递数据给子组件
+```
+class Index extends Component {
+  config = {
+    ...
+  }
+
+  constructor (props) {
+    super(props)
+    // 1.设置状态
+    this.state = {
+      bannerlist: [],
+      prolist: [] // +++++++++++++++++++++++++
+    }
+  }
+  // 2.请求数据
+  componentDidMount () {
+    ...
+    // +++++++++++++++++++++++
+    request({
+      url: '/pro'
+    }).then(res => {
+      console.log(res.data)
+      this.setState({
+        prolist: res.data.data
+      })
+    })
+  }
+
+  render () {
+    return (
+      <View>
+        <Swiper indicatorDots autoplay circular>
+          ...
+        </Swiper>
+        {/* 
+          ++++++++++++++++++++++++++++
+          在父组件调用子组件的地方，添加一个自定义的属性，属性的值就是要传递给子组件的值，如果值是一个变量，boolean，或者是number类，需要使用{}包裹
+        */}
+        <Prolist prolist={ this.state.prolist }/>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```
+
+### 8.5 子组件接收数据并且校验数据
+先行安装 prop-types 数据校验模块
+> cnpm i prop-types -S
+```
+import Taro from '@tarojs/taro'
+import PropTypes from 'prop-types'
+import { View, Image } from '@tarojs/components'
+import './index.scss'
+/**
+ * 子组件 使用 prop-types 进行数据的校验，校验完毕。
+ * 在子组件（类组件）通过 this.props.自定义的属性名  就可以访问数据
+ * 如果组件时函数式组件，通过 props.自定义的属性名  访问数据
+ */
+class Index extends Taro.Component {
+  render () {
+    return (
+      <View className="prolist">
+        ....
+      </View>
+    )
+  }
+}
+
+// 校验数据格式
+Index.propTypes = {
+  prolist: PropTypes.array
+}
+
+export default Index
+
+```
+
+### 8.6 渲染列表数据
+```
+import Taro from '@tarojs/taro'
+import PropTypes from 'prop-types'
+import { View, Image } from '@tarojs/components'
+import './index.scss'
+/**
+ * 子组件 使用 prop-types 进行数据的校验，校验完毕。
+ * 在子组件（类组件）通过 this.props.自定义的属性名  就可以访问数据
+ * 如果组件时函数式组件，通过 props.自定义的属性名  访问数据
+ */
+class Index extends Taro.Component {
+  render () {
+    return (
+      <View className="prolist">
+        {
+          this.props.prolist.map(item => (
+            <View className="proitem" key={ item.proid }>
+              <View className="itemimg">
+                <Image className="img" src={ item.proimg }></Image>
+              </View>
+              <View className="iteminfo">
+                <View className="title">{ item.proname }</View>
+                <View className="title">{ item.sales } / { item.stock }</View>
+                <View className="price">￥{ item.price }</View>
+              </View>
+            </View>
+          ))
+        }
+      </View>
+    )
+  }
+}
+
+// 校验数据格式
+Index.propTypes = {
+  prolist: PropTypes.array
+}
+
+export default Index
+
+```
+
+### 8.7 下拉刷新 --- 不支持 h5模式
+```
+constructor (props) {
+  super(props)
+  // 1.设置状态
+  this.state = {
+    bannerlist: [],
+    prolist: [],
+    pageCode: 1 // ++++++++++++++++++++++++++
+  }
+}
+
+onPullDownRefresh () { // 不支持H5模式
+  request({
+    url: '/pro'
+  }).then(res => {
+    console.log(res.data)
+    this.setState({
+      prolist: res.data.data,
+      pageCode: 1 // 必须重置页码
+    })
+    Taro.stopPullDownRefresh() // 这句话一定要加，真机测试时一直处于加载状态
+  })
+}
+```
+
+### 8.8 上拉加载实现
+```
+onReachBottom () {
+  request({
+    url: '/pro',
+    data: {
+      pageCode: this.state.pageCode
+    }
+  }).then(res => {
+    console.log(res.data)
+    if (res.data.code === '10000') {
+      Taro.showToast({
+        title: '没有更多数据了'
+      })
+    } else {
+      // 获取数据  处理数据  修改状态
+      let prolist = this.state.prolist
+      let pageCode = this.state.pageCode
+
+      prolist = [...prolist, ...res.data.data]
+      pageCode += 1
+
+      this.setState({
+        prolist,
+        pageCode
+      })
+
+    }
+  })
+}
+```
