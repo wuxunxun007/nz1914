@@ -838,6 +838,811 @@ export default Index
 ```
 
 ### 10.3 表单校验
+```
+import Taro, { Component } from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { AtInput, AtForm, AtButton } from 'taro-ui'
+import './index.scss'
 
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      tel: '18813007814',
+      password: '123456',
+      telflag: false,
+      passwordflag: false
+    }
+  }
+  render () {
+    return (
+      <View>
+        <AtForm>
+          <AtInput
+            error={ this.state.telflag }
+            name='tel'
+            clear
+            title='手机号码'
+            type='text'
+            placeholder='手机号码'
+            value={this.state.tel}
+            onErrorClick={ () => {
+              console.log('手机号码长度为11位')
+              Taro.showToast({
+                title: '手机号码长度为11位',
+                icon: 'none',
+                duration: 5000
+              })
+            }}
+            onChange={ (value) => {
+              console.log(value)
+              let telflag = this.state.telflag
+              if (value.length !== 11) {
+                telflag = true
+              } else {
+                telflag = false
+              }
+              this.setState({
+                tel: value,
+                telflag
+              })
+            } }
+          />
+          <AtInput
+            error={ this.state.passwordflag}
+            name='password'
+            title='密码'
+            clear
+            type='password'
+            placeholder='密码'
+            value={this.state.password}
+            onErrorClick={ () => {
+              console.log('密码长度应该大于6')
+              Taro.showToast({
+                title: '密码长度应该大于6',
+                icon: 'none',
+                duration: 5000
+              })
+            }}
+            onChange={ (value) => {
+              // let passwordflag = this.state.passwordflag
+              // if (value.length < 6) {
+              //   passwordflag = true
+              // } else {
+              //   passwordflag = false
+              // }
+              let passwordflag = value.length < 6 ? true : false;
+              this.setState({
+                password: value,
+                passwordflag
+              })
+            }}
+          />
+          {/* <AtButton disabled={ this.state.tel.length !== 11 || this.state.password.length < 6 } type='secondary' size='normal'>登陆</AtButton> */}
+          {/* 推荐使用下面写法，因为你的业务逻辑可能是复杂的正则验证 */}
+          <AtButton disabled={ this.state.telflag || this.state.passwordflag } type= { this.state.telflag && this.state.passwordflag ? 'secondary' : 'primary'} size='normal' >登陆</AtButton>
+        </AtForm>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+### 10.4 登陆
+```
+<AtButton disabled={ this.state.telflag || this.state.passwordflag } type= { this.state.telflag && this.state.passwordflag ? 'secondary' : 'primary'} size='normal' onClick={ () => {
+  request({
+    url: '/users/login',
+    method: 'POST',
+    data: {
+      tel: this.state.tel,
+      password: this.state.password
+    },
+    // 如果实际注册现实未注册，加上头信息
+    header: {'content-type': "application/json; charset=utf-8"}
+  }).then(res => {
+    console.log(res)
+    if (res.data.code === '10006') {
+      Taro.showToast({
+        title: '用户未注册，请先注册',
+        icon: 'none',
+        duration: 3000
+      })
+    } else if (res.data.code === '10007') {
+      Taro.showToast({
+        title: '密码错误',
+        icon: 'none',
+        duration: 3000
+      })
+    } else {
+      Taro.showToast({
+        title: '登陆成功',
+        icon: 'none',
+        duration: 3000
+      })
+
+      try {
+        Taro.setStorageSync('userid', res.data.data.userid)
+        Taro.setStorageSync('token', res.data.data.token)
+        Taro.navigateBack()
+      } catch (error) {
+        
+      }
+    }
+  })
+} }>登陆</AtButton>
+```
 ## 11.购物车
 vue （uniapp）直接改变数据 ---  （获取数据，处理数据、修改状态）
+
+## 11.1 加入购物车
+```
+// pages/detail/index.js
+addCart () {
+  try {
+    let userid = Taro.getStorageSync('userid')
+    let token = Taro.getStorageSync('token')
+    console.log(userid, token)
+    if (userid && token) {
+      request({
+        url: '/cart/add',
+        method: 'POST',
+        data: {
+          userid,
+          token,
+          proid: this.state.proid,
+          num: 1
+        },
+        // Taro Post
+        header: {'content-type': "application/json; charset=utf-8"}
+      }).then( res => {
+        if (res.data.code === '10119') {
+          Taro.showToast({
+            title: '还未登陆，请先登陆',
+            icon: 'none'
+          })
+          Taro.navigateTo({
+            url: '/pages/login/index'
+          })
+        } else {
+          Taro.showToast({
+            title: '加入购物车成功',
+            icon: 'none'
+          })
+        }
+      })
+    } else {
+      Taro.showToast({
+        title: '还未登陆，请先登陆',
+        icon: 'none'
+      })
+      Taro.navigateTo({
+        url: '/pages/login/index'
+      })
+    }
+  } catch (error) {
+    
+  }
+}
+render () {
+  return (
+    <View>
+      <Image src={ this.state.proimg }></Image>
+      <View>{ this.state.proname }</View>
+      <View>{ this.state.price }</View>
+      <Button onClick={ this.addCart.bind(this) }>加入购物车</Button>
+    </View>
+  )
+}
+```
+
+## 11.2 查看购物车
+
+```
+import Taro, { Component } from '@tarojs/taro'
+// 为什呢 View 要单独引入，react 说明 组件的首字母一定要大写，小写被当做html标签
+import { View } from '@tarojs/components'
+import { request } from './../../utils'
+
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      cartlist: [],
+      isTrue: true,
+      totalNum: 0,
+      totalPrice: 0
+    }
+  }
+  componentDidShow () {
+    try {
+      // 本地判断是否登陆
+      let userid = Taro.getStorageSync('userid')
+      let token = Taro.getStorageSync('token')
+      if ( userid && token) {
+        request({
+          url: '/cart',
+          data: {
+            userid,
+            token
+          }
+        }).then( res => {
+          console.log(res.data.code)
+          if (res.data.code === '10119') {
+            Taro.showToast({
+              title: '还未登陆，请先登陆',
+              icon: 'none'
+            })
+            Taro.navigateTo({
+              url: '/pages/login/index'
+            })
+          } else if (res.data.code === '10112') {
+            Taro.showToast({
+              title: '购物车空空如也，请加购',
+              icon: 'none'
+            })
+            this.setState({
+              isTrue: true
+            })
+          } else {
+            res.data.data.map( item => {
+              item.flag = true
+            })
+            this.setState({
+              isTrue: false,
+              cartlist: res.data.data
+            })
+            
+          }
+        })
+      } else {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      }
+    } catch (error) {
+      
+    }
+  }
+  render () {
+    return (
+      <View>
+        {
+          this.state.isTrue ? <View>购物车空空如也，请加购</View> : <View>
+            {
+              this.state.cartlist.map((item, index) => {
+                return (
+                  <View key={ item.proid }>
+                  { item.proname } - { item.price } - 
+                  <Text>减</Text>
+                  { item.num }
+                  <Text>加</Text>
+                  </View>
+                )
+              })
+            }
+          </View>
+        }
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```
+
+### 11.3 计算总价和总数
+```
+import Taro, { Component } from '@tarojs/taro'
+// 为什呢 View 要单独引入，react 说明 组件的首字母一定要大写，小写被当做html标签
+import { View } from '@tarojs/components'
+import { request } from './../../utils'
+
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      cartlist: [],
+      isTrue: true,
+      totalNum: 0,
+      totalPrice: 0
+    }
+  }
+  componentDidShow () {
+    try {
+      // 本地判断是否登陆
+      let userid = Taro.getStorageSync('userid')
+      let token = Taro.getStorageSync('token')
+      if ( userid && token) {
+        request({
+          url: '/cart',
+          data: {
+            userid,
+            token
+          }
+        }).then( res => {
+          console.log(res.data.code)
+          if (res.data.code === '10119') {
+            Taro.showToast({
+              title: '还未登陆，请先登陆',
+              icon: 'none'
+            })
+            Taro.navigateTo({
+              url: '/pages/login/index'
+            })
+          } else if (res.data.code === '10112') {
+            Taro.showToast({
+              title: '购物车空空如也，请加购',
+              icon: 'none'
+            })
+            this.setState({
+              isTrue: true
+            })
+          } else {
+            res.data.data.map( item => {
+              item.flag = true
+            })
+            this.setState({
+              isTrue: false,
+              cartlist: res.data.data
+            }, () => {
+              this.count() // 用来计算总价和总数
+            })
+            
+          }
+        })
+      } else {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      }
+    } catch (error) {
+      
+    }
+  }
+  count () {
+    console.log(this.state.cartlist)
+    let num = 0
+    let price = 0
+    this.state.cartlist.map( item => {
+      num += item.num
+      price += item.num * item.price
+    })
+
+    this.setState({
+      totalNum: num,
+      totalPrice: price
+    })
+  }
+  render () {
+    return (
+      <View>
+        {
+          this.state.isTrue ? <View>购物车空空如也，请加购</View> : <View>
+            {
+              this.state.cartlist.map((item, index) => {
+                return (
+                  <View key={ item.proid }>
+                  { item.proname } - { item.price } - 
+                  <Text>减</Text>
+                  { item.num }
+                  <Text>加</Text>
+                  </View>
+                )
+              })
+            }
+            <View>
+              总数： { this.state.totalNum }
+            </View>
+            <View>
+              总价： { this.state.totalPrice }
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```
+
+### 11.4 加减数量
+```
+<Text onClick={ () => {
+  let num = item.num > 1 ? item.num - 1 : 1
+  if (num === item.num) { // 截止 不去找服务器
+    Taro.showToast({
+      title: '你还要我怎样，就剩1个了',
+      icon: 'none'
+    })
+    // 代码不继续往下执行
+    return
+  }
+  let cartid = item.cartid
+  try {
+    let token = Taro.getStorageSync('token')
+    // 省略判断
+    request({
+      url: '/cart/update',
+      data: {
+        num,
+        cartid,
+        token
+      }
+    }).then( res => {
+      if (res.data.code === '10119') {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      } else {
+        Taro.showToast({
+          title: '数量减少成功',
+          icon: 'none'
+        })
+        // 获取数据  处理数据  修改状态
+        let list = this.state.cartlist
+        list[index].num = num
+        this.setState({
+          cartlist: list
+        }, () => { // 重新计算总价和总数
+          this.count()
+        })
+      }
+    })
+  } catch (error) {
+    
+  }
+} }>减</Text>
+{ item.num }
+<Text onClick= { () => {
+  let num = item.num + 1
+  let cartid = item.cartid
+  try {
+    let token = Taro.getStorageSync('token')
+    // 省略判断
+    request({
+      url: '/cart/update',
+      data: {
+        num,
+        cartid,
+        token
+      }
+    }).then( res => {
+      if (res.data.code === '10119') {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      } else {
+        Taro.showToast({
+          title: '数量增加成功',
+          icon: 'none'
+        })
+        // 获取数据  处理数据  修改状态
+        let list = this.state.cartlist
+        list[index].num = num
+        this.setState({
+          cartlist: list
+        }, () => { // 重新计算总价和总数
+          this.count()
+        })
+      }
+    })
+  } catch (error) {
+    
+  }
+} }>加</Text>
+```
+
+### 11.5 全选和单选
+```
+import Taro, { Component } from '@tarojs/taro'
+// 为什呢 View 要单独引入，react 说明 组件的首字母一定要大写，小写被当做html标签
+import { View, Checkbox, CheckboxGroup } from '@tarojs/components'
+import { request } from './../../utils'
+import './index.scss'
+class Index extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      cartlist: [],
+      isTrue: true,
+      totalNum: 0,
+      totalPrice: 0,
+      allSelected: true
+    }
+  }
+  componentDidShow () {
+    try {
+      // 本地判断是否登陆
+      let userid = Taro.getStorageSync('userid')
+      let token = Taro.getStorageSync('token')
+      if ( userid && token) {
+        request({
+          url: '/cart',
+          data: {
+            userid,
+            token
+          }
+        }).then( res => {
+          console.log(res.data.code)
+          if (res.data.code === '10119') {
+            Taro.showToast({
+              title: '还未登陆，请先登陆',
+              icon: 'none'
+            })
+            Taro.navigateTo({
+              url: '/pages/login/index'
+            })
+          } else if (res.data.code === '10112') {
+            Taro.showToast({
+              title: '购物车空空如也，请加购',
+              icon: 'none'
+            })
+            this.setState({
+              isTrue: true
+            })
+          } else {
+            res.data.data.map( item => {
+              item.flag = true
+            })
+            this.setState({
+              isTrue: false,
+              cartlist: res.data.data
+            }, () => {
+              this.count() // 用来计算总价和总数
+            })
+            
+          }
+        })
+      } else {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      }
+    } catch (error) {
+      
+    }
+  }
+  count () {
+    console.log(this.state.cartlist)
+    let num = 0
+    let price = 0
+    this.state.cartlist.map( item => { // 选中才会计算
+      item.flag ? num += item.num : num += 0
+      item.flag ? price += item.num * item.price : price += 0
+    })
+
+    this.setState({
+      totalNum: num,
+      totalPrice: price
+    })
+  }
+  render () {
+    const { cartlist= [] } = this.state
+    return (
+      <View>
+        {
+          this.state.isTrue ? <View>购物车空空如也，请加购</View> : <View>
+            <CheckboxGroup onChange={
+              (event) => {
+                console.log(event.detail)
+                // 获取长度  表明是否被选中
+                let len = event.detail.value.length
+                console.log(len)
+                // 通过长度获取到 选中和不选中变量
+                let flag = len === 1 ? true : false
+                // 获取列表数据
+                let list = this.state.cartlist
+                // 处理数据
+                list.map(item => {
+                  flag ? item.flag = true : item.flag = false
+                })
+                // 修改状态
+                this.setState({
+                  allSelected: flag,
+                  cartlist: list
+                }, () => { // 计算总价和总数
+                  this.count()
+                })
+              }
+            }>
+              <Checkbox checked={ this.state.allSelected } />全选
+            </CheckboxGroup>
+            {
+              cartlist.map((item, index) => {
+                return (
+                  <View key={ item.proid }>
+                  <CheckboxGroup onChange={
+                    (event) => {
+                      // console.log(event.detail.value)
+                      // 根据选中的数组的长度判断是否被选中
+                      let len = event.detail.value.length
+                      // console.log(len)
+                      // console.log('index', index)
+                      // 设置标识 表明当前的这个是不是被选中
+                      let flag = len === 1 ? true : false
+                      // 获取数据 准备处理以及修改数据用
+                      let list = this.state.cartlist
+                      // list[index].flag = flag
+                      console.log('flag', flag)
+                      // 如果当前的数据被选中
+                      if (flag === true) {
+                        // console.log('111', list[index].flag)
+                        // 处理当前的数据源中的标识为选中状态
+                        list[index].flag = true
+                        // 检测其他的选项是否都是选中状态
+                        let test = list.every(val => {
+                          console.log('val', val.flag)
+                          return val.flag === true
+                        })
+                        // console.log('test', test)
+                        // 如果都被选中
+                        if (test) {
+                          // 全选设置为选中状态，更新状态，计算总价总数
+                          this.setState({
+                            allSelected: true,
+                            cartlist: list
+                          }, () => {
+                            this.count()
+                          })
+                        } else {
+                          // 其余项有没被选中，更新状态，计算总价总数
+                          this.setState({
+                            allSelected: false,
+                            cartlist: list
+                          }, () => {
+                            this.count()
+                          })
+                        }
+                      } else {
+                        // 点击当前未被选中，需要将当前的数据值为 false
+                        list[index].flag = false
+                        // 更新状态，计算总价总数
+                        this.setState({
+                          allSelected: false,
+                          cartlist: list
+                        }, () => {
+                          this.count()
+                        })
+                      }
+                    }
+                  }>
+                    <Checkbox checked={item.flag}/>
+                  </CheckboxGroup>
+                  
+                  { item.proname } - { item.price } - 
+                  ...
+                  </View>
+                )
+              })
+            }
+            <View>
+              总数： { this.state.totalNum }
+            </View>
+            <View>
+              总价： { this.state.totalPrice }
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```
+
+### 11.6 提交订单
+// 大勋接口中的list应该是一个 数组组成字符串
+// 相应数据 res.data.data 是本次的订单号
+```
+<Button onClick={ () => {
+  let list = []
+  // 过滤器 array.filter
+  this.state.cartlist.map( itm => {
+    if (itm.flag) {
+      list.push(itm)
+    }
+  })
+  try {
+    let userid = Taro.getStorageSync('userid')
+    let token = Taro.getStorageSync('token')
+    console.log({
+      userid,
+      token,
+      list
+    })
+    request({
+      url: '/order/add',
+      method: 'POST',
+      data: {
+        userid,
+        token,
+        list: JSON.stringify(list)
+      },
+      header: {'content-type': "application/json; charset=utf-8"}
+    }).then( res => {
+      console.log(res.data)
+      // 购物车提交到订单后，购物车的数据会自动清空
+      if (res.data.code === '10119') {
+        Taro.showToast({
+          title: '还未登陆，请先登陆',
+          icon: 'none'
+        })
+        Taro.navigateTo({
+          url: '/pages/login/index'
+        })
+      } else {
+        Taro.navigateTo({
+          url: '/pages/order/index?id=' + res.data.data
+        })
+      }
+    })
+  } catch (error) {
+    
+  }
+}}>提交订单</Button>
+```
+
+### 11.7 确认订单页面获取数据（地址信息，列表信息、.....）
+```
+import Taro, { Component } from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { request } from './../../utils'
+class Index extends Component {
+  componentDidShow () {
+    try {
+      let token = Taro.getStorageSync('token')
+      request({
+        url: '/order/detail',
+        data: {
+          token,
+          orderid: this.$router.params.id
+        }
+      }).then(res => {
+        console.log(res.data.data)
+      })
+    } catch (error) {
+      
+    }
+  }
+  render () {
+    return (
+      <View>
+        确认订单页面
+        <View>地址确认,点击地址可以去到地址管理页面，页面可添加删除以及修改</View>
+        <View>商品列表确认</View>
+        <View>支付方式确认</View>
+      </View>
+    )
+  }
+}
+
+export default Index
+
+```

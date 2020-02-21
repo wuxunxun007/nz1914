@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/kind/kind",
+    "pages/cart/cart",
+    "pages/user/user"
+  ],
+  "window": {
+    "defaultTitle": "My App"
+  }
+}

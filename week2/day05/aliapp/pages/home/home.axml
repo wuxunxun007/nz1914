@@ -1,0 +1,17 @@
+
+<swiper indicator-dots="{{true}}" >
+  <block a:for="{{['#4A90E2','#F5A623']}}">
+    <swiper-item >
+      <view style="background-color: {{item}};width:100%;height:300rpx"/>
+    </swiper-item>
+  </block>
+</swiper>
+<view>
+  New Page
+</view>
+
+
+<list>
+  <list-item thumb="https://gw.alipayobjects.com/zos/rmsportal/VBqNBOiGYkCjqocXjdUj.png" arrow="{{true}}">List Item
+  </list-item>
+</list>

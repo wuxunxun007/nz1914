@@ -9,30 +9,17 @@ import './index.scss'
  */
 class Index extends Taro.Component {
   render () {
+    // Cannot read property 'map' of undefined
+    let { prolist=[] } = this.props
+    if (!prolist) {
+      return (
+        <View>还未获取到列表</View>
+      )
+    }
     return (
       <View className="prolist">
         {
-          this.props.prolist.map(item => (
-            // <View className="proitem" key={ item.proid }>
-            //   <View className="itemimg">
-            //     <Image className="img" src={ item.proimg }></Image>
-            //   </View>
-            //   <View className="iteminfo">
-            //     <View className="title">{ item.proname }</View>
-            //     <View className="title">{ item.sales } / { item.stock }</View>
-            //     <View className="price">￥{ item.price }</View>
-            //   </View>
-            // </View>
-            // <Navigator url={ '/pages/detail/index?proid=' + item.proid } className="proitem" key={ item.proid }>
-            //   <View className="itemimg">
-            //     <Image className="img" src={ item.proimg }></Image>
-            //   </View>
-            //   <View className="iteminfo">
-            //     <View className="title">{ item.proname }</View>
-            //     <View className="title">{ item.sales } / { item.stock }</View>
-            //     <View className="price">￥{ item.price }</View>
-            //   </View>
-            // </Navigator>
+          prolist.map(item => (
             <View className="proitem" key={ item.proid } onClick={ () => {
               Taro.navigateTo({
                 url: '/pages/detail/index?proid=' + item.proid

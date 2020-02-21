@@ -28,6 +28,7 @@ class App extends Component {
       'pages/user/index',
       'pages/index/index',
       'pages/detail/index',
+      'pages/order/index',
       'pages/login/index'
     ],
     window: { // 窗口表现
