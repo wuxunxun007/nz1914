@@ -1,0 +1,121 @@
+@charset "utf-8";
+/**
+ * 全局Variables
+ * 基础变量map，如果不想定义某属性，将其value设置为null
+ * 仅使用2种长度单位：px用于边框，rem用于除边框之外的所有地方
+ * 本文件中map使用"_"开头，config中不使用"_"
+ * variables ⇌ config
+ */
+
+// 基本设置
+$setting: (
+    // {String} 版本号
+    version:             "2.1.3",
+    // {Boolean} 是否开启厂商前缀
+    is-vendor-prefix:    true,
+    // {String} 厂商前缀
+    vendor-prefix:       -webkit-,
+    // {String} 背景图片服务器
+    bgimg-domain:        "//s.qunarzz.com/yo/bgimg/",
+    // {Boolean} 是否允许横竖屏时文本字号自动调整
+    is-text-size-adjust: true,
+    // {Boolean} 是否显示页面滚动条
+    is-scrollbar:        false
+);
+
+// responsive media types
+$media-types: (
+    // {String} 横屏
+    landscape: "(orientation: landscape)",
+    // {String} 竖屏
+    portrait:  "(orientation: portrait)",
+    // 视网膜屏定义，这里不做非常细节的界定，比如完全一致的整数倍
+    // retina1x：< 1.5dppx；
+    // retina2x：1.5dppx ~ 2.49dppx
+    // retina3x：>= 2.5dppx
+    // {String} 非视网膜屏
+    retina1x:  "(max--moz-device-pixel-ratio: 1.49),
+                (-webkit-max-device-pixel-ratio: 1.49),
+                (max-device-pixel-ratio: 1.49),
+                (max-resolution: 143dpi),
+                (max-resolution: 1.49dppx)",
+    // {String} 视网膜屏2x
+    retina2x:  "(min--moz-device-pixel-ratio: 1.5) and (max--moz-device-pixel-ratio: 2.49),
+                (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 2.49),
+                (min-device-pixel-ratio: 1.5) and (max-device-pixel-ratio: 2.49),
+                (min-resolution: 144dpi) and (max-resolution: 239dpi),
+                (min-resolution: 1.5dppx) and (max-resolution: 2.49dppx)",
+    // {String} 视网膜屏3x
+    retina3x:  "(min--moz-device-pixel-ratio: 2.5),
+                (-webkit-min-device-pixel-ratio: 2.5),
+                (min-device-pixel-ratio: 2.5),
+                (min-resolution: 240dpi),
+                (min-resolution: 2.5dppx)",
+    // 待添加stop-points
+    // 用于常规手机横竖屏
+    xs:        "(max-width: 767px)",
+    // 用于常规pad横竖屏
+    s:         "(min-width: 768px) and (max-width: 1024px)",
+    // 用于常规笔记本
+    m:         "(min-width: 1025px) and (max-width: 1280px)",
+    // 用于常规台式机
+    l:         "(min-width: 1281px) and (max-width: 1440px)",
+    // 用于超大台式机
+    xl:        "(min-width: 1441px)"
+);
+
+// ico font
+$ico: (
+    // {Boolean} 是否使用图标字体
+    is-use:     true,
+    // {String} 图标字体文件名
+    font-name:  yofont,
+    // {Url} 图标字体路径
+    font-path:  "//ss.qunarzz.com/yo/font/1.0.3/"
+);
+
+// z-index
+$z-index: (
+    // {Number} 下拉菜单层级范围50-100
+    dropdown:    50,
+    // {Number} 遮罩层级
+    mask:        1000,
+    // {Number} 弹窗层级范围1001-1500
+    dialog:      1001,
+    // {Number} 浮层层级范围1501-2000
+    popup:       1501,
+    // {Number} 搜索层级范围2001-2500
+    suggest:     2001,
+    // {Number} 搜索层级范围2501-3000
+    actionsheet: 2501,
+    // {Number} 浮层层级范围3001-3500
+    tooltip:     3001,
+    // {Number} loading层级
+    loading:     9999
+);
+
+// Layout align
+$align: (
+    // {String} 定义弹性水平对齐方式
+    justify-content: center,
+    // {String} 定义弹性垂直对齐方式
+    align-items:     center
+);
+
+// Layout column(1)
+$column: (
+    // {Length} 容器高度，取值：[auto|cover]
+    size:     auto
+);
+
+// Layout flex
+$flex: (
+    // {String} 定义是水平布局还是垂直布局: row | column
+    direction: column
+);
+
+// Layout Stacked
+$stacked: (
+    // {Length} 区块外边距
+    margin: .2rem .1rem
+);
