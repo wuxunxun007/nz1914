@@ -15,9 +15,13 @@ export function getBannerlist (params) {
  * 封装首页列表请求
  */
 export function getProlist (params) {
-  const { url } = params
-  return request({
-    url,
-    method: 'GET'
+  const { url, data } = params
+  // return request({
+  //   url,
+  //   data:
+  //   method: 'GET'
+  // })
+  return request.get(url, {
+    params: data || {}
   })
 }

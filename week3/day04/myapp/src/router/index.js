@@ -39,6 +39,20 @@ const routes = [
       default: () => import('@/views/user/index.vue'),
       footer: Footer
     }
+  },
+  {
+    path: '/login',
+    name: 'login', // 命名路由，可以用于声明式导航传参
+    components: {
+      default: () => import('@/views/login/index.vue')
+    }
+  },
+  {
+    path: '/detail/:proid',
+    name: 'detail', // 命名路由，可以用于声明式导航传参
+    components: {
+      default: () => import('@/views/detail/index.vue')
+    }
   }
 ]
 

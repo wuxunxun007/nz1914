@@ -566,6 +566,8 @@ export default {
     getBannerlist({ url: '/pro/banner' }).then(res => {
       console.log(res)
       // 对于复合类型的变量，变量名不指向数据，而是指向数据所在的地址。const命令只是保证变量名指向的地址不变，并不保证该地址的数据不变，所以将一个对象声明为常量必须非常小心。
+      
+      
       const arr = []
       res.data.data.map(item => {
         arr.push('http://daxun.kuboy.top' + item)
@@ -593,3 +595,558 @@ export default {
 </style>
 
 ```
+
+> **如果一旦报错信息如下：Node Sass could not find a binding for your current environment,即刻执行 cnpm i node-sass -S 即可**
+
+# 6.实现首页的下拉刷新以及上拉加载
+
+```
+import { Swipe, SwipeItem, Lazyload, Card, PullRefresh } from 'vant'
+Vue.use(PullRefresh)
+
+<van-pull-refresh v-model="isLoading" @refresh="onRefresh"></van-pull-refresh>包裹content区域中所有代码（如果只需要列表下拉刷新，只包裹列表即可）
+
+实现初始化数据 以及实现的刷新函数
+data () {
+  return {
+    isLoading: false, // true表示现在正在下拉刷新状态中
+    pageCode: 1,
+    finished: false // true标识没有更多数据了
+  }
+},
+methods: {
+  onRefresh () {
+    console.log('下拉刷新')
+  }
+}
+```
+
+## 6.1 实现下拉刷新函数
+**实质就是请求第一页的数据并且一定要记住重置页码**
+
+* 将isLoading的值设置为true,表示正在加载
+
+* 请求数据
+
+* 请求成功将isLoading的值设置为false并且将页码重置，还要将数据标识finished重新初始化为false,表示刷新已完成
+
+```
+methods: {
+  onRefresh () {
+    console.log('下拉刷新')
+    this.isLoading = true
+    getProlist({ url: '/pro' }).then(res => {
+      this.isLoading = false
+      this.prolist = res.data.data
+      this.pageCode = 1
+      this.finished = false // 表示可以继续上拉finished显示没有数据了
+    })
+  }
+}
+```
+
+## 6.2 上拉加载的实现
+```
+import { Swipe, SwipeItem, Lazyload, Card, PullRefresh, List } from 'vant'
+Vue.use(List)
+
+<van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"></van-list>包裹列表组件
+
+实现初始化数据以及上拉加载事件
+data () {
+  return {
+    finished: false, // true标识没有更多数据了
+    loading: false // true表示正在上拉加载下一页数据
+  }
+},
+methods: {
+  onLoad () {
+    console.log('上拉加载')
+  }
+}
+```
+
+**实质就是请求下一页的数据并且一定要记住页码加一**
+
+* 将loading的值设置为true,表示正在加载
+
+* 请求数据,判断还有没有数据，如果没有数据，将finished的值设置为true，如果有数据，拼接数组，赋值给prolist
+
+* loading的值设置为false
+
+--重新封装列表数据请求--
+```
+// api/home.js
+export function getProlist (params) {
+  const { url, data } = params
+  // return request({
+  //   url,
+  //   data:
+  //   method: 'GET'
+  // })
+  return request.get(url, {
+    params: data || {}
+  })
+}
+```
+
+上拉加载函数实现
+```
+onLoad () {
+  console.log('上拉加载')
+  this.loading = true
+  getProlist({
+    url: 'pro',
+    data: {
+      pageCode: this.pageCode
+    }
+  }).then(res => {
+    this.loading = false
+    this.pageCode++
+    if (res.data.code === '10000') {
+      this.finished = true
+    } else {
+      this.prolist = [...this.prolist, ...res.data.data]
+    }
+  })
+}
+```
+
+# 7.点击列表进入产品的详情
+
+## 7.1 构建详情页面
+```
+<template>
+  <div class="container detail">
+    <div class="box">
+      <header class="header">详情</header>
+      <div class="content">详情</div>
+    </div>
+    <van-goods-action>
+      <van-goods-action-icon icon="chat-o" text="客服" />
+      <van-goods-action-icon icon="cart-o" text="购物车" />
+      <van-goods-action-button type="warning" text="加入购物车" />
+      <van-goods-action-button type="danger" text="立即购买" />
+    </van-goods-action>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant'
+
+Vue.use(GoodsAction)
+Vue.use(GoodsActionButton)
+Vue.use(GoodsActionIcon)
+export default {
+
+}
+</script>
+
+<style lang="scss">
+
+</style>
+
+```
+
+## 7.2 配置路由
+```
+{
+  path: '/detail/:proid',
+  name: 'detail', // 命名路由，可以用于声明式导航传参
+  components: {
+    default: () => import('@/views/detail/index.vue')
+  }
+}
+```
+
+## 7.3 声明式导航跳转
+```
+// 方法一
+<router-link :to="{ name: 'detail', params: { proid: item.proid } }" v-for="item of prolist" :key="item.proid">
+  <van-card
+    :price="item.price"
+    :desc="item.note"
+    :title="item.proname"
+    :thumb="item.proimg"
+  />
+</router-link>
+
+// 方法二
+<router-link :to="'/detail/' + item.proid" v-for="item of prolist" :key="item.proid">
+  <van-card
+    :price="item.price"
+    :desc="item.note"
+    :title="item.proname"
+    :thumb="item.proimg"
+  />
+</router-link>
+```
+
+## 7.4 编程式跳转
+```
+<van-card
+  v-for="item of prolist"
+  :key="item.proid"
+  :price="item.price"
+  :desc="item.note"
+  :title="item.proname"
+  :thumb="item.proimg"
+  @click="toDetail(item.proid)"
+/>
+
+toDetail (proid) {
+  console.log(proid)
+  // this.$router.push('/detail/' + proid)
+  // this.$router.push({ name: 'detail', params: { proid } })
+  this.$router.push({ path: '/detail/' + proid })
+}
+```
+
+## 7.5 详情页面获取参数请求数据渲染数据
+
+* 封装请求详情的接口
+```
+// api/detail.js
+import request from './index'
+
+/**
+ * 获取产品的详情
+ */
+export function getDetailData (params) {
+  const { url, data } = params
+  return request.get(url, {
+    params: data || {}
+  })
+}
+
+```
+* 详情获取数据并且渲染
+```
+<div class="box">
+  <header class="header">详情</header>
+  <div class="content">
+    <img :src="proimg" alt="">
+    <h1>{{ proname }}</h1>
+    <h6>{{ note }}</h6>
+    <p>{{ price }}</p>
+  </div>
+</div>
+import { getDetailData } from '@/api/detail'
+data () {
+  return {
+    proname: '',
+    proimg: '',
+    proid: '',
+    price: '',
+    note: ''
+  }
+},
+mounted () {
+  const { $route: { params: { proid } } } = this
+  getDetailData({
+    url: '/pro/detail',
+    data: {
+      proid
+    }
+  }).then(res => {
+    console.log(res)
+    const { proname, proimg, price, note } = res.data.data
+    this.proname = proname
+    this.proid = proid
+    this.price = price
+    this.proimg = proimg
+    this.note = note
+  })
+}
+```
+
+# 8、接入客服系统
+https://www.meiqia.com/
+
+# 9.登录外加状态管理器
+
+## 9.1 登陆页面外加路由
+```
+<div class="box">
+  <header class="header">登陆</header>
+  <div class="content">
+    登陆
+  </div>
+</div>
+
+{
+  path: '/login',
+  name: 'login', // 命名路由，可以用于声明式导航传参
+  components: {
+    default: () => import('@/views/login/index.vue')
+  }
+},
+```
+## 9.2 设计登陆表单
+```
+<template>
+  <div class="box">
+    <header class="header">登陆</header>
+    <div class="content">
+      <van-form validate-first @submit="onSubmit" @failed="onFailed">
+        <van-field clearable v-model="tel" name="tel" label="手机号" :rules="telRules" />
+        <van-field clearable  type="password" v-model="password" name="password" label="密码" :rules="passwordRules" />
+        <div style="margin: 16px;">
+          <van-button round block type="info" native-type="submit">
+            登陆
+          </van-button>
+        </div>
+      </van-form>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import { Form, Field, Button } from 'vant'
+
+Vue.use(Field)
+Vue.use(Button)
+Vue.use(Form)
+export default {
+  data () {
+    this.telRules = [
+      { required: true, message: '请输入手机号' },
+      { validator: this.telValidator, message: '手机号格式错误' }
+    ]
+    this.passwordRules = [
+      { required: true, message: '请输入验证码' },
+      { validator: this.passwordValidator, message: '密码格式错误' }
+    ]
+    return {
+      password: '',
+      tel: ''
+    }
+  },
+  methods: {
+    // 校验函数返回 true 表示校验通过，false 表示不通过
+    telValidator (val) {
+      return /1\d{10}/.test(val)
+    },
+    passwordValidator (val) {
+      return val.length >= 6
+    },
+    onSubmit (values) {
+      console.log('values', values)
+    },
+    onFailed (errorInfo) {
+      console.log(errorInfo)
+    }
+  }
+}
+</script>
+```
+
+## 9.3 设计相应的接口完成登陆
+```
+// api/user.js
+import request from './index'
+
+/**
+ * 登陆操作
+ */
+export function login (params) {
+  const { url, data } = params
+  return request.post(url, data)
+}
+
+
+onSubmit (values) {
+  console.log('values', values)
+  login({
+    url: '/users/login',
+    data: values
+  }).then(res => {
+    if (res.data.code === '10007') {
+      Toast('密码错误')
+    } else if (res.data.code === '10006') {
+      Toast('该用户未注册')
+    } else {
+      Toast('登陆成功')
+      // 保存相关信息至本地 userid token
+      // 保存登陆状态至状态管理器
+      // data: { token: '', userid: '', username: ''}
+      localStorage.setItem('token', res.data.data.token)
+      localStorage.setItem('userid', res.data.data.userid)
+    }
+  })
+},
+```
+
+## 9.4 设计状态管理器
+```
+// store/login.js
+export default {
+  namespaced: true,
+  state: {
+    // 登陆状态  --- 避免重新刷新页面时 状态丢失
+    loginstate: localStorage.getItem('loginstate') || 'no'
+  },
+  actions: {},
+  mutations: {
+    changeLoginState (state, data) {
+      state.loginstate = data
+    }
+  }
+}
+
+// store/index.js
+import Vue from 'vue'
+import Vuex from 'vuex'
+import login from './md/login'
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  modules: {
+    login
+  }
+})
+
+```
+
+## 9.5 登陆成功后修该状态管理器状态
+```
+import { mapMutations } from 'vuex'
+
+methods: {
+  ...mapMutations({
+    changeLoginState: 'login/changeLoginState'
+  }),
+  onSubmit (values) {
+    ...
+    Toast('登陆成功')
+    // 保存相关信息至本地 userid token
+    // 保存登陆状态至状态管理器
+    // data: { token: '', userid: '', username: ''}
+    localStorage.setItem('token', res.data.data.token)
+    localStorage.setItem('userid', res.data.data.userid)
+    localStorage.setItem('loginstate', 'ok')
+    // 同时将状态管理器中的登陆状态修改 ++++++++++++++++++++++++++++++
+    this.changeLoginState('ok')
+    this.$router.back()
+  }
+}
+```
+
+## 9.6 加入购物车时验证登陆状态
+```
+import { mapState } from 'vuex'
+
+computed: {
+  ...mapState({
+    loginstate: state => state.login.loginstate
+  })
+},
+
+methods: {
+  addCart () {
+    if (this.loginstate === 'ok') {
+      
+    } else {
+      Toast('还未登陆')
+      this.$router.push('/login')
+    }
+  }
+}
+```
+
+* 加入购物车
+```
+// api/cart.js
+import request from './index'
+
+/**
+ * 加入购物车
+ */
+export function addCart (params) {
+  const { url, data } = params
+  return request.post(url, data)
+}
+
+import { addCart } from '@/api/cart'
+
+
+addCart () {
+  if (this.loginstate === 'ok') {
+    addCart({
+      url: '/cart/add',
+      data: {
+        userid: localStorage.getItem('userid'),
+        proid: this.proid,
+        num: 1
+      }
+    }).then(res => {
+      if (res.data.code === '10119') {
+        Toast('还未登陆')
+        this.$router.push('/login')
+      } else {
+        Toast('加入购物车成功')
+      }
+    })
+  } else {
+    Toast('还未登陆')
+    this.$router.push('/login')
+  }
+}
+```
+
+* 详情查看购物车
+```
+tocart () {
+  if (this.loginstate === 'ok') {
+    this.$router.push('/cart')
+  } else {
+    Toast('还未登陆')
+    this.$router.push('/login')
+  }
+}
+```
+
+## 9.7 如果点击选项卡进入购物车页面
+
+* 可以使用组件内导航守卫
+```
+<template>
+  <div class="box">
+    <header class="header">购物车</header>
+    <div class="content">购物车</div>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+export default {
+  computed: {
+    ...mapState({
+      loginstate: state => state.login.loginstate
+    })
+  },
+  beforeRouteEnter (to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+    // if (this.loginstate === 'ok') {
+    //   next()
+    // } else {
+    //   this.$router.push('/login')
+    // }
+    next(vm => {
+      if (vm.loginstate === 'ok') {
+        next()
+      } else {
+        vm.$router.push('/login')
+      }
+    })
+  }
+}
+</script>
+```
+
+* 购物车查看数据
+参照uniapp的业务逻辑
